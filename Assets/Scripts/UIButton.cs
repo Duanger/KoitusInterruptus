@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+
 
 public class UIButton : MonoBehaviour
 {
 	public int ButtonIndex;
-	private Button _butt;
+
 
 	void Start()
 	{

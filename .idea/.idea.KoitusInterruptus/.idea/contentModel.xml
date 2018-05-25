@@ -8,6 +8,7 @@
         <e p="Scripts" t="Include">
           <e p="FishAnimator.cs" t="Include" />
           <e p="LineController.cs" t="Include" />
+          <e p="MenuUiInputHandler.cs" t="Include" />
           <e p="SinputPlayerController.cs" t="Include" />
           <e p="UIButton.cs" t="Include" />
           <e p="UnbreakableManager.cs" t="Include" />
