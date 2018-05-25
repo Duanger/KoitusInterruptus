@@ -50,6 +50,46 @@ public class CommonBindingEditor : Editor {
 				//add gamepad name here
 				padBinding.names.Add("GAMEPAD_NAME_HERE");
 			}
+			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+
+			EditorGUILayout.Space();
+			EditorGUILayout.PrefixLabel("Partial Names:");
+			EditorGUILayout.LabelField("If a gamepad can't find a match on the above names,");
+			EditorGUILayout.LabelField("check if it contains any of the following.");
+
+
+			for (int i = 0; i < padBinding.partialNames.Count; i++) {
+				EditorGUILayout.BeginHorizontal();
+				padBinding.partialNames[i] = EditorGUILayout.TextField(padBinding.partialNames[i]);
+				if (GUILayout.Button("x")) {
+					//remove gamepad name
+					padBinding.partialNames.RemoveAt(i);
+				}
+				EditorGUILayout.EndHorizontal();
+			}
+			if (GUILayout.Button("+")) {
+				//add gamepad name here
+				padBinding.partialNames.Add("PARTIAL_NAME_HERE");
+			}
+			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+
+			EditorGUILayout.Space();
+			EditorGUILayout.PrefixLabel("Default pad:");
+			EditorGUILayout.LabelField("If a common or saved binding isn't found,");
+			EditorGUILayout.LabelField("is this the default binding that will be loaded?");
+			bool wasDefault = padBinding.isDefault;
+			padBinding.isDefault = EditorGUILayout.Toggle("Is Default", padBinding.isDefault);
+			if (padBinding.isDefault && !wasDefault) {
+				//just set this binding to defqault, lets unset any other common bindings of the same OS from being default
+				System.Object[] commonBindingAssets = Resources.LoadAll("", typeof(CommonBinding));
+				for (int i = 0; i < commonBindingAssets.Length; i++) {
+					if (((CommonBinding)commonBindingAssets[i]).os == padBinding.os) {
+						((CommonBinding)commonBindingAssets[i]).isDefault = false;
+						EditorUtility.SetDirty((CommonBinding)commonBindingAssets[i]);
+					}
+				}
+				padBinding.isDefault = true;
+			}
 		}
 
 		if (currentPanel==1){

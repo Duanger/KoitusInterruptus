@@ -13,6 +13,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   names:
   - "\xA9Microsoft Corporation Xbox 360 Wired Controller"
+  partialNames:
+  - 360
+  - xbox
+  - Microsoft
+  isDefault: 0
   os: 1
   buttons:
   - buttonType: 1

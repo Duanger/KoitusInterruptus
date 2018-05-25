@@ -13,6 +13,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   names:
   - Sony Computer Entertainment Wireless Controller
+  partialNames:
+  - PS4
+  - Playstation
+  - Sony
+  isDefault: 0
   os: 1
   buttons:
   - buttonType: 1

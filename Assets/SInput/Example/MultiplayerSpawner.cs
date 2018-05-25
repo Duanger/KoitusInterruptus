@@ -14,7 +14,7 @@ namespace SinputSystems.Examples{
 		
 		// Update is called once per frame
 		void Update () {
-			SinputSystems.InputDeviceSlot slot = Sinput.ListenForSlotPress("Join");
+			SinputSystems.InputDeviceSlot slot = Sinput.GetSlotPress("Join");
 
 			if (slot != SinputSystems.InputDeviceSlot.any){
 				

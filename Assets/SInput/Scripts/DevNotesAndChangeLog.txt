@@ -1,0 +1,93 @@
+~~~~~~~~~~ Sophie's Dev Notes: ~~~~~~~~~~
+
+priority to-do for future versions:
+TODO: prefab touch joystick/buttons that can be bound to virtual controls (and instead of custom rebind, can be moved,scaled,rotated)
+TODO: also possible touch control prefabs; swipe listener that can act as left/right/up/down buttons, pinch-zoom axis, and any other gestures I can think of
+TODO: Sinput-version of unity's Standalone Input Module, so sinput inputs can navigate unity UI interactibes
+TODO: tidy up the whole initialisation process, it's kind of a nightmare and is probably full of redundant stuff
+TODO: support for multiple control schemes and saved custom control schemes
+TODO: be able to bind modifier keys (and gamepad buttons), eg shift+a, LB+dpadLeft ?
+TODO: optimisation might be good to do, sometime
+TODO: optimnise axis button states so they are updated when an input is checked at the start of a frame
+TODO: figure out wtf is the deal with the "" gamepad on windows after disconnecting a gamepad
+TODO: make clear video documentation, and SUBTITLE it
+TODO: virtual slots for virtual inputs
+TODO: get undo/redo to work with inspector changes for control schemes and custom bindings
+
+TODO: Make better example scenes showing all key features
+TODO: If a control has an analogue input and a button input of the same name (eg som pads have a triger axis AND trigger button), favour the analogue in GetAxis(), and favour the button in GetButton()
+TODO: Make sure every function that takes a control name or smart control name throws an error if that name isn't found
+
+Saving to-do:
+TODO: save each control's toggle setting
+TODO: save axis inversion & sensitivity settings
+TODO: Save mouse sensitivity, and smartcontrol scales
+TODO: Alt option to player prefs, be able to save/load settings from a single file/string and let devs control specific IO
+
+Rebinding to-do;
+TODO: if keyboard&mouse control are set to distinct, seperate them in the rebind menu
+TODO: when adding an input, automatically start listening for what its binding should be
+TODO: Find a way to deal with (or at least highlight) inputs that clash in the rebinding menu
+TODO: Get rebind menu elements to have explicit navigation controls because the automatic ones are not exactly perfect
+
+
+future feature wishlist/to-do
+ - GetDisplayName(controlName, PreferedDeviceType, defaultDisplayName) for user-facing text prompts
+ - GetDisplayIcon() like GetDisplayName() but returns an image for the button/key/whatever
+ - Multiple mice/keyboards
+ - VR input
+ - Microphone input
+ - force feedback
+ - find ways of supporting more gamepads?
+ - have multiple slots for a single keyboard so two players can share?
+ - 
+
+ other ideas:
+ - common shortcut to bring up rebind menu, loads the rebind scene additively and ignores other sinput calls until the menu is closed
+ 
+
+
+
+ 
+ ~~~~~~~~~~ Changelog: ~~~~~~~~~~
+
+ 2018C (25/05/18)
+   - A dialogue is displayed to confirm generating new Input Manager axis, and the changes update immediately in the editor
+   - positive/negative control settings for smart controls can now be selected from a pop-up instead of being typed out in the editor
+   - Changing a control's name in the editor will update any smart controls that reference it
+   - Virtual inputs now implemented, set with functions SetVirtualAxis(), SetDeltaPreference(), SetVirtualButton(), and/or SetVirtualButtonHeld() in SinputSystems.VirtualInputs
+   - Addev "virtual1" slot, I might add more virtual slots later once I've figured out how I want them to work
+   - ResetInputs() can now be used by slot, if you want to have only one device's inputs reset
+   - fixed issue where a couple of functions may have used the last frame's input data
+   - CurrentValueIsFramerateIndependent() is now PrefersDeltaUse(). Old function was too unweildly and harder to understand.
+   - UpdateGamepads() is now CheckGamepads(), so as not to confuse with other update functions
+   - Tidied up core Sinput class & update loop (moved axis-as-button-state stuff into control updates)
+   - Added SetInverted() to set whether a smart control (doesn't work with regular controls) is inverted, and GetInverted() too, because you probably wanna know if it's inverted.
+   - added mouseSensitivity setting
+   - Added SetScale() and GetScale() so you can set the 'sensitivity' of a smart control by slot (basically this just sets a multiplier)
+
+ 2018B (23/05/18)
+   - Added Sinput editor menu
+   - Moved input settings generation to the editor menu
+   - Rebind UI scales with screen size
+   - GetVector() results now never have a magnitude greater than 1 by default
+   - Added ResetInputs() to force sinput to ignore new inputs for X amount of time
+   - moved my development notes to this file
+   - changed how control checks work, now they are all calculated no more than once per frame, the state of each control for each slot being cached
+   - added GetButtonDownRepeating() function for times when you want a button hold to trigger multiple pressed (good for scrolling menu selection)
+   - added readme file
+   - Changed default control scheme mouse inputs to be "look" inputs that work with gamepad or mouse
+   - Added GetAxisRaw()
+   - Added CurrentValueIsFrameRateIndependent(), tells you if you should avoid multiplying a controls GetAxis values by deltaTime for this frame.
+   - values from framerate independent inputs (eg mouse motion) are now no longer smoothed for smart control axis checks
+   - Control scheme editor foldouts are now animated, because it's pretty
+   - Controls & smart controls can now be re-ordered in the editor
+   - Control scheme editor UI appearance improvements
+   - Added SetToggle() & GetToggle() for making controls with toggle behaviour
+   - mouse movement and mouse scroll can now be set when rebinding
+   - Added partial name checks for common bindings, for if an exact name match can't be found
+   - Common bindings now had an 'isDefault' setting, if no name match can be found at all, this default binding will be used
+
+ 2018A (17/05/18)
+   - First release
+ 

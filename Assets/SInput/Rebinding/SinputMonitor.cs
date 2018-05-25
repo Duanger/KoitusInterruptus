@@ -25,9 +25,16 @@ namespace SinputSystems.Rebinding{
 		void Start () {
 			
 		}
-		
+
+		int mouseMovementMin = 10;
+		public void ResetMouseListening() {
+			mouseHorizontalTotal = 0f;
+			mouseVerticalTotal = 0f;
+			mouseScrollTotal = 0f;
+		}
+
 		// Update is called once per frame
-		void Update () {
+		void Update() {
 			changeFound = false;
 			changedKey = KeyCode.None;
 
@@ -35,9 +42,9 @@ namespace SinputSystems.Rebinding{
 			changedPadAxis.padIndex = -1;
 			changedPadAxis.inputIndex = -1;
 			changedPadAxis.axisMotionIsPositive = true;
-			changedPadAxis.restingValue=0f;
-			changedPadAxis.minRecordedValue=0f;
-			changedPadAxis.maxRecordedValue=0f;
+			changedPadAxis.restingValue = 0f;
+			changedPadAxis.minRecordedValue = 0f;
+			changedPadAxis.maxRecordedValue = 0f;
 
 			changedPadButton = new gamepadStateChange();
 			changedPadButton.padIndex = -1;
@@ -46,17 +53,32 @@ namespace SinputSystems.Rebinding{
 			changedMouse = MouseInputType.None;
 
 
+
+
+
 			//keyboard check
-			foreach(KeyboardInputType keycode in Enum.GetValues(typeof(KeyboardInputType))){
-				KeyCheck( (KeyCode)Enum.Parse(typeof(KeyCode), keycode.ToString()) );
+			foreach (KeyboardInputType keycode in Enum.GetValues(typeof(KeyboardInputType))) {
+				KeyCheck((KeyCode)Enum.Parse(typeof(KeyCode), keycode.ToString()));
 			}
 
 			//gamepad checks
 			UpdateAxisMonitoring();
 
 			//mouse checks
-			//keyboard check
-			foreach(MouseInputType mouseInput in Enum.GetValues(typeof(MouseInputType))){
+			if (AcceptChangesFromSlot(-1)) { 
+				mouseHorizontalTotal += Input.GetAxis("Mouse Horizontal");
+				mouseVerticalTotal += Input.GetAxis("Mouse Vertical");
+				mouseScrollTotal += Input.GetAxis("Mouse Scroll");
+				if (mouseHorizontalTotal > mouseMovementMin) changedMouse = MouseInputType.MouseMoveRight;
+				if (mouseHorizontalTotal < -mouseMovementMin) changedMouse = MouseInputType.MouseMoveLeft;
+				if (mouseVerticalTotal > mouseMovementMin) changedMouse = MouseInputType.MouseMoveUp;
+				if (mouseVerticalTotal < -mouseMovementMin) changedMouse = MouseInputType.MouseMoveDown;
+				if (mouseScrollTotal >= 1) changedMouse = MouseInputType.MouseScrollUp;
+				if (mouseScrollTotal <= -1) changedMouse = MouseInputType.MouseScrollDown;
+				if (changedMouse != MouseInputType.None) changeFound = true;
+			}
+
+			foreach (MouseInputType mouseInput in Enum.GetValues(typeof(MouseInputType))){
 				MouseCheck( mouseInput );
 			}
 
@@ -79,6 +101,10 @@ namespace SinputSystems.Rebinding{
 				}
 			}*/
 		}
+
+		private float mouseHorizontalTotal = 0f;
+		private float mouseVerticalTotal = 0f;
+		private float mouseScrollTotal = 0f;
 
 		private gamepadState[] allGamepadAxis;
 		public struct gamepadState{
@@ -182,6 +208,7 @@ namespace SinputSystems.Rebinding{
 		}
 		public void SetListeningDevice(string deviceName){
 			listeningDevice = deviceName;
+			ResetMouseListening();
 		}
 		void BuildAxisArray(){
 			int padCount = Input.GetJoystickNames().Length;

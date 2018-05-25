@@ -8,7 +8,7 @@ namespace SinputSystems.Rebinding{
 
 		private Control[] controls;
 		private Control[] controlsDefaults;
-
+		
 		public Transform rebindMenuContainer;
 
 		public GameObject devicePanelPrefab;
@@ -18,6 +18,8 @@ namespace SinputSystems.Rebinding{
 		private List<devicePanel> devicePanels = new List<devicePanel>();
 
 		public SinputMonitor inputMonitor;
+
+		
 
 		// Use this for initialization
 		void Start() {
@@ -71,6 +73,8 @@ namespace SinputSystems.Rebinding{
 
 		string[] recordedPads = new string[0];
 		void Update(){
+			
+
 			bool gamepadsChanged = false;
 			string[] gamepads = Sinput.GetGamepads();
 			if (recordedPads.Length!=gamepads.Length) gamepadsChanged = true;
@@ -357,6 +361,7 @@ namespace SinputSystems.Rebinding{
 
 		//stuff for building UI
 		void BuildRebindingPanels(){
+
 			//Debug.Log("Building rebind UI");
 
 			//clear any existing panels
@@ -378,13 +383,15 @@ namespace SinputSystems.Rebinding{
 
 				if (!deviceAlreadyListed) AddDevicePanel(InputDeviceType.GamepadAxis, pads[p], p);
 			}
-
+			
 		}
+	
 
 		void AddDevicePanel(InputDeviceType deviceType, string deviceName, int deviceSlotIndex){
 			GameObject newDevicePanelObj = (GameObject)GameObject.Instantiate(devicePanelPrefab);
 			newDevicePanelObj.name = deviceName;
 			newDevicePanelObj.transform.SetParent(rebindMenuContainer);
+			newDevicePanelObj.transform.localScale = Vector3.one;
 			devicePanel newDevicePanel = new devicePanel();
 			newDevicePanel.devicePanelObj = newDevicePanelObj;
 
@@ -407,6 +414,7 @@ namespace SinputSystems.Rebinding{
 				GameObject newControlPanelObj = (GameObject)GameObject.Instantiate(ControlPanelPrefab);
 				newControlPanelObj.name = controls[c].name;
 				newControlPanelObj.transform.SetParent(newDevicePanelObj.transform.Find("ControlsPanel").transform);
+				newControlPanelObj.transform.localScale = Vector3.one;
 				controlPanel newControlPanel = new controlPanel();
 				newControlPanel.controlPanelObj = newControlPanelObj;
 
@@ -441,6 +449,7 @@ namespace SinputSystems.Rebinding{
 						//this input is referring to this device
 						GameObject newInputPanelObj = (GameObject)GameObject.Instantiate(inputPanelPrefab);
 						newInputPanelObj.transform.SetParent(newControlPanelObj.transform);
+						newInputPanelObj.transform.localScale = Vector3.one;
 						inputPanel newInputPanel = new inputPanel();
 
 						newInputPanel.inputButton = newInputPanelObj.transform.Find("Input").GetComponent<Button>();

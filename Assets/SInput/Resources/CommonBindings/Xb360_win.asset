@@ -13,6 +13,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   names:
   - Controller (XBOX 360 For Windows)
+  partialNames:
+  - 360
+  - xbox
+  - Microsoft
+  isDefault: 0
   os: 2
   buttons:
   - buttonType: 1

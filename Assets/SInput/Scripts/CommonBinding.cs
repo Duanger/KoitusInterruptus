@@ -7,8 +7,12 @@ namespace SinputSystems{
 	[CreateAssetMenu]
 	public class CommonBinding : ScriptableObject {
 
+		
+
 		public List<string> names = new List<string>();//names of gamepads that this mapping can apply to
-		//public List<int> matchingGamepadSlots = new List<int>();//used only at runtime, contains input slot indices that match compatible gamepad names
+		public List<string> partialNames = new List<string>();//if an exact name match isn't found for a pad, use this binding if it has a partial match with this
+
+		public bool isDefault = false; //if no common binding or saved custom binding is found, are we going to use this binding
 
 		public OSFamily os = OSFamily.Windows;
 

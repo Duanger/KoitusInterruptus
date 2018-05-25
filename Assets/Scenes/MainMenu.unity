@@ -221,9 +221,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CurrentMenuButtonIndex: 0
   _uiEventSystem: {fileID: 284309064}
-  _start: {fileID: 245105292}
-  _input: {fileID: 192558755}
-  _exit: {fileID: 897814796}
+  _mainButts:
+  - {fileID: 245105292}
+  - {fileID: 192558755}
+  - {fileID: 897814796}
 --- !u!1 &192558753
 GameObject:
   m_ObjectHideFlags: 0

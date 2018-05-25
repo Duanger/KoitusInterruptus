@@ -4,16 +4,24 @@
 
 namespace SinputSystems{
 	public enum ButtonAction{
-		HELD,
-		DOWN,
-		UP,
-		NOTHING,
+		HELD, //held down
+		DOWN, //pressed this frame
+		UP, //released this frame
+		NOTHING, //for no action
+
+		REPEATING //for repeating presses, it can be a type of check but NOT a state a button can itself be in
 	}
 
 	public enum MouseInputType{
 		None,
+		MouseMoveLeft,
+		MouseMoveRight,
+		MouseMoveUp,
+		MouseMoveDown,
 		MouseHorizontal,
 		MouseVertical,
+		MouseScrollUp,
+		MouseScrollDown,
 		MouseScroll,
 		MousePositionX,
 		MousePositionY,
@@ -424,7 +432,6 @@ namespace SinputSystems{
 		PS4,
 		PSVita,
 		XboxOne,
-		WiiU,
 		Switch
 	}
 
@@ -448,6 +455,7 @@ namespace SinputSystems{
 		keyboardAndMouse=17,
 		keyboard=18,
 		mouse=19,
+		virtual1=20,
 		any=0,
 	}
 

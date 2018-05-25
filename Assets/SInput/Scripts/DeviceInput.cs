@@ -27,7 +27,7 @@ namespace SinputSystems{
 			inputType = type;
 
 			if (inputType==InputDeviceType.Virtual){
-				virtualAxisValue = 0f;
+			//	virtualAxisValue = 0f;
 				virtualInputState = ButtonAction.NOTHING;
 			}
 		}
@@ -61,8 +61,8 @@ namespace SinputSystems{
 
 		//////////// ~ virtual specific stuff ~ ////////////
 		public string virtualInputID;
-		public ButtonAction virtualInputState;
-		public float virtualAxisValue;
+		private ButtonAction virtualInputState;
+		//public float virtualAxisValue;
 
 
 		public bool ButtonCheck(ButtonAction bAction, InputDeviceSlot slot){
@@ -126,8 +126,11 @@ namespace SinputSystems{
 
 			//virtual device input checks
 			if (inputType == InputDeviceType.Virtual){
-				if (bAction == virtualInputState) return true;
-				if (bAction == ButtonAction.HELD && virtualInputState == ButtonAction.DOWN) return true;
+				if (slot == InputDeviceSlot.any || slot == InputDeviceSlot.virtual1) {
+					virtualInputState = VirtualInputs.GetVirtualButton(virtualInputID);
+					if (bAction == virtualInputState) return true;
+					if (bAction == ButtonAction.HELD && virtualInputState == ButtonAction.DOWN) return true;
+				}
 			}
 
 			//mouseaxis button checks (these don't happen)
@@ -241,7 +244,10 @@ namespace SinputSystems{
 
 			//virtual device axis input checks
 			if (inputType == InputDeviceType.Virtual){
-				return virtualAxisValue;
+				if (slot == InputDeviceSlot.any || slot == InputDeviceSlot.virtual1) {
+					return VirtualInputs.GetVirtualAxis(virtualInputID);
+				}
+				//return virtualAxisValue;
 			}
 
 			//mouseaxis button checks (these don't happen)
@@ -250,11 +256,23 @@ namespace SinputSystems{
 
 				switch (mouseInputType){
 				case MouseInputType.MouseHorizontal:
-					return Input.GetAxisRaw("Mouse Horizontal");
+					return Input.GetAxisRaw("Mouse Horizontal")*Sinput.mouseSensitivity;
+				case MouseInputType.MouseMoveLeft:
+					return Mathf.Min(Input.GetAxisRaw("Mouse Horizontal") * Sinput.mouseSensitivity, 0f) * -1f;
+				case MouseInputType.MouseMoveRight:
+					return Mathf.Max(Input.GetAxisRaw("Mouse Horizontal") * Sinput.mouseSensitivity, 0f);
+				case MouseInputType.MouseMoveUp:
+					return Mathf.Max(Input.GetAxisRaw("Mouse Vertical") * Sinput.mouseSensitivity, 0f);
+				case MouseInputType.MouseMoveDown:
+					return Mathf.Min(Input.GetAxisRaw("Mouse Vertical") * Sinput.mouseSensitivity, 0f) * -1f;
 				case MouseInputType.MouseVertical:
-					return Input.GetAxisRaw("Mouse Vertical");
+					return Input.GetAxisRaw("Mouse Vertical") * Sinput.mouseSensitivity;
 				case MouseInputType.MouseScroll:
 					return Input.GetAxisRaw("Mouse Scroll");
+				case MouseInputType.MouseScrollUp:
+					return Mathf.Max(Input.GetAxisRaw("Mouse Scroll"), 0f);
+				case MouseInputType.MouseScrollDown:
+					return Mathf.Min(Input.GetAxisRaw("Mouse Scroll"), 0f) * -1f;
 				case MouseInputType.MousePositionX:
 					return Input.mousePosition.x;
 				case MouseInputType.MousePositionY:
@@ -351,7 +369,6 @@ namespace SinputSystems{
 		}
 
 
-
-		//should be able to allow 'virtual' inputs that can be set by script, allowing people to have say, touchscreen buttons or custom hardware still hook into SInput controls
+		
 	}
 }

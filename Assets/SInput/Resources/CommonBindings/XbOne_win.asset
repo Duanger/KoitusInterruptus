@@ -16,6 +16,11 @@ MonoBehaviour:
   - MICROSOFT XBOX ONE WIRELESS CONTROLLER
   - MICROSOFT XBOX ONE CONTROLLER
   - Controller (Xbox One For Windows)
+  partialNames:
+  - one
+  - xbox
+  - microsoft
+  isDefault: 1
   os: 2
   buttons:
   - buttonType: 1
