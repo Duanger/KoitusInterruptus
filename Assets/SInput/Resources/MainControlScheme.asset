@@ -25,12 +25,12 @@ MonoBehaviour:
     - sintime
   - name: Up
     keyboardInputs: 1b00000001000000
-    gamepadInputs: 110000000d000000
+    gamepadInputs: 11000000150000000d000000
     mouseInputs: 
     virtualInputs: []
   - name: Down
     keyboardInputs: 1700000002000000
-    gamepadInputs: 120000000e000000
+    gamepadInputs: 12000000160000000e000000
     mouseInputs: 
     virtualInputs: []
   - name: Jump
