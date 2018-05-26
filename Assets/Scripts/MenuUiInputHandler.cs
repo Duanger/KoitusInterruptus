@@ -23,55 +23,77 @@ public class MenuUiInputHandler : MonoBehaviour
 	private InputDeviceSlot _player1 = InputDeviceSlot.gamepad1;
 	private InputDeviceSlot _player2 = InputDeviceSlot.gamepad2;
 
-	public void InputPlayerHandler(bool anyPlayer,int switchy, int switchy2, int numOfAxes,Image[] buttonImage)
+	public void InputPlayerHandler(int switchy, int switchy2, Image[] leftHandImage, Image[] rightHandImage)
 	{
-		if (switchy < 0)
+		Dictionary<int,int> buttonGridPos = new Dictionary<int, int>();
+		if (Sinput.GetButtonDownRepeating(_axeStrings[0], _player1))
 		{
-			switchy = buttonImage.Length;
+			switchy--;
 		}
 
-		if (switchy > buttonImage.Length)
+		if (Sinput.GetButtonDownRepeating(_axeStrings[1], _player1))
 		{
-			switchy = 0;
+			switchy++;
 		}
-		if (anyPlayer)
+		if (Sinput.GetButtonDownRepeating(_axeStrings[2], _player2))
 		{
-			if (numOfAxes == 2)
+			switchy2--;
+		}
+
+		if (Sinput.GetButtonDownRepeating(_axeStrings[3], _player2))
+		{
+			switchy2++;
+		}
+
+		ExecuteEvents.Execute(leftHandImage[switchy].gameObject, new BaseEventData(EventSystem.current),
+			ExecuteEvents.selectHandler);
+		foreach (var image in leftHandImage)
+		{
+			if (image != leftHandImage[switchy])
 			{
-				if (Sinput.GetButtonDownRepeating(_axeStrings[0], AnySticks))
-				{
-					switchy--;
-				}
+				ExecuteEvents.Execute(image.gameObject, new BaseEventData(EventSystem.current), ExecuteEvents.deselectHandler);
+			}
+		}
+		ExecuteEvents.Execute(rightHandImage[switchy2].gameObject, new BaseEventData(EventSystem.current),
+			ExecuteEvents.selectHandler);
+		foreach (var image in rightHandImage)
+		{
+			if (image != rightHandImage[switchy2])
+			{
+				ExecuteEvents.Execute(image.gameObject, new BaseEventData(EventSystem.current), ExecuteEvents.deselectHandler);
+			}
+		}
+		foreach (var b in leftHandImage)
+		{
+			if (switchy == System.Array.IndexOf(leftHandImage, b) && Sinput.GetButtonDown("Submit", _player1))
+			{
+				ExecuteEvents.Execute(b.gameObject, new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
+			}
+		}
 
-				if (Sinput.GetButtonDownRepeating(_axeStrings[1], AnySticks))
-				{
+		foreach (var c in rightHandImage)
+		{
+			if (switchy == System.Array.IndexOf(leftHandImage, c) && Sinput.GetButtonDown("Submit", _player2))
+			{
+				ExecuteEvents.Execute(c.gameObject, new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
+			}
+		}
+
+	}
+	public void InputPlayerHandler(bool anyPlayer,int switchy, Image[] buttonImage)
+	{
+		
+		
+	        if (Sinput.GetButtonDownRepeating(_axeStrings[0], AnySticks))
+			{
+			    switchy--;
+			}
+
+			if (Sinput.GetButtonDownRepeating(_axeStrings[1], AnySticks))
+			{
 					switchy++;
-				}
+			}
 				EventSystem.current.SetSelectedGameObject(buttonImage[switchy].gameObject);
-			}
-
-			if (numOfAxes == 4)
-			{
-				if (Sinput.GetButtonDownRepeating(_axeStrings[0], AnySticks))
-				{
-					switchy--;
-				}
-
-				if (Sinput.GetButtonDownRepeating(_axeStrings[1], AnySticks))
-				{
-					switchy++;
-				}
-				if (Sinput.GetButtonDownRepeating(_axeStrings[2], AnySticks))
-				{
-					switchy2--;
-				}
-
-				if (Sinput.GetButtonDownRepeating(_axeStrings[3], AnySticks))
-				{
-					switchy2++;
-				}
-				
-			}
 			
 			foreach (var b in buttonImage)
 			{
@@ -80,48 +102,13 @@ public class MenuUiInputHandler : MonoBehaviour
 					ExecuteEvents.Execute(b.gameObject, new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
 				}
 			}
-		}
-		else
-		{
-			if (numOfAxes == 2)
-			{
-				if (Sinput.GetButtonDownRepeating(_axeStrings[2], _player1))
-				{
-					switchy--;
-				}
-
-				if (Sinput.GetButtonDownRepeating(_axeStrings[2], _player2))
-				{
-					switchy2--;
-				}
-
-				if (Sinput.GetButtonDownRepeating(_axeStrings[3], AnySticks))
-				{
-					switchy2--;
-				}
-				if(Sinput.GetButtonDownRepeating(_axeStrings[3],_player2))
-				{
-					switchy2++;
-				}
-				foreach (var b in buttonImage)
-				{
-					/*if (switchy == System.Array.IndexOf(buttonImage, b) && Sinput.GetButtonDown("Submit", _player1))
-					{
-						ExecuteEvents.Execute(b.gameObject, new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
-					}
-					if (switchy == System.Array.IndexOf(buttonImage, b) && Sinput.GetButtonDown("Submit", _player2)
-					{
-						ExecuteEvents.Execute(b.gameObject, new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
-					}*/
-				}
-			}
-		}
+	}
+		
+			
 
 		
-	}
-	void Update ()
-	{
-			switch (CurrentMenuButtonIndex)
+
+			/*switch (CurrentMenuButtonIndex)
 			{
 				case 0:
 					_uiEventSystem.SetSelectedGameObject(_mainButts[0].gameObject);
@@ -150,6 +137,6 @@ public class MenuUiInputHandler : MonoBehaviour
 					_mainButts[0].color = Color.white;
 					_mainButts[1].color = Color.white;
 					break;
-			}		
-	}
+			}	*/	
+	
 }
