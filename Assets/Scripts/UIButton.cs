@@ -6,10 +6,21 @@ using UnityEngine;
 public class UIButton : MonoBehaviour
 {
 	public int ButtonIndex;
+	private GameObject _herChoice;
 
-
-	void Start()
+	private void Start()
 	{
+		if (gameObject.name == "Start")
+		{
+			_herChoice = GameObject.FindGameObjectWithTag("ChooseFish");
+			_herChoice.SetActive(false);
+		}
+	}
+
+	public void PressedStart()
+	{
+		_herChoice.SetActive(true);
+		transform.parent.gameObject.SetActive(false);
 		//UnbreakableManager.Feesh
 	}
 
