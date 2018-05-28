@@ -29,6 +29,7 @@ public class FishAnimator : MonoBehaviour
 
 	void Start ()
 	{
+		
 		if (fishType == FishType.greenBride)
 		{
 			_enumIndex = 0;
@@ -44,9 +45,10 @@ public class FishAnimator : MonoBehaviour
 			_enumIndex = 2;
 		}
 
-		if (fishType == FishType.orangeGroom)
+		if (UnbreakableManager.OrangeFeesh == UnbreakableManager.OrangeFishChosen.OrangeGroomChosen && GetComponent<SinputPlayerController>().PlayerNumber == 1)
 		{
 			_enumIndex = 3;
+			Debug.Log(UnbreakableManager.OrangeFeesh);
 		}
 		_fishTypeString = fishType.ToString();
 		_facingLeft = true;

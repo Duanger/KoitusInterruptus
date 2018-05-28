@@ -38,7 +38,7 @@ public  class MenuUiInputHandler : MonoBehaviour
 			{
 				ExecuteEvents.Execute(image.gameObject, new BaseEventData(EventSystem.current), ExecuteEvents.deselectHandler);
 			}
-			if (switchy == System.Array.IndexOf(leftHandImage, image) && Sinput.GetButtonDown("Submit", _player1))
+			if (image == leftHandImage[switchy] && Sinput.GetButtonDown("Submit", _player1))
 			{
 				ExecuteEvents.Execute(image.gameObject, new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
 			}
@@ -55,7 +55,7 @@ public  class MenuUiInputHandler : MonoBehaviour
 			{
 				ExecuteEvents.Execute(image.gameObject, new BaseEventData(EventSystem.current), ExecuteEvents.deselectHandler);
 			}
-			if (switchy == System.Array.IndexOf(leftHandImage, image) && Sinput.GetButtonDown("Submit", _player2))
+			if (image == rightHandImage[switchy2] && Sinput.GetButtonDown("Submit", _player2))
 			{
 				ExecuteEvents.Execute(image.gameObject, new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
 			}
@@ -65,19 +65,17 @@ public  class MenuUiInputHandler : MonoBehaviour
 	{
 			foreach (var b in buttonImage)
 			{
-				EventSystem.current.SetSelectedGameObject(b.gameObject);
-				if (switchy == System.Array.IndexOf(buttonImage, b) && Sinput.GetButtonDown("Submit", AnySticks))
+				//EventSystem.current.SetSelectedGameObject(b.gameObject);
+				ExecuteEvents.Execute(b.gameObject, new BaseEventData(EventSystem.current), ExecuteEvents.selectHandler);
+				if (b != buttonImage[switchy])
+				{
+					ExecuteEvents.Execute(b.gameObject, new BaseEventData(EventSystem.current), ExecuteEvents.deselectHandler);
+				}
+				if (b == buttonImage[switchy] && Sinput.GetButtonDown("Submit", AnySticks))
 				{
 					ExecuteEvents.Execute(b.gameObject, new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
 					Debug.Log(b.ToString());
 				}
 			}
 	}
-		
-			
-
-		
-
-			/*	*/	
-	
 }

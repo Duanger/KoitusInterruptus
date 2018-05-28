@@ -21,7 +21,7 @@ public class ChooseFishMenuHandler : MonoBehaviour
 	
 	// Update is called once per frame
 	void Update () {
-		if (gameObject.activeSelf && !_start.activeSelf)
+		if (gameObject.activeSelf)
 		{
 			if (OrangeFishIndex > 1)
 			{

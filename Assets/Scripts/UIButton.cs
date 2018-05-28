@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 public class UIButton : MonoBehaviour
 {
 	public int ButtonIndex;
 	private GameObject _herChoice;
+	[SerializeField] private bool _testTwoControllers;
 
 	private void Start()
 	{
@@ -22,6 +24,14 @@ public class UIButton : MonoBehaviour
 		_herChoice.SetActive(true);
 		transform.parent.gameObject.SetActive(false);
 		//UnbreakableManager.Feesh
+	}
+
+	private void Update()
+	{
+		if (_testTwoControllers)
+		{
+			SceneManager.LoadScene(1);
+		}
 	}
 
 	// Update is called once per frame

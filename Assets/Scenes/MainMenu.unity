@@ -317,7 +317,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8b41945ab81c0043bf0b1df36f2cdc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ButtonIndex: 0
+  ButtonIndex: 2
+  _testTwoControllers: 0
 --- !u!114 &167426359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -356,7 +357,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 167426360}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 167426358}
+        m_MethodName: ChooseAFish
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &167426360
@@ -440,7 +452,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8b41945ab81c0043bf0b1df36f2cdc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ButtonIndex: 0
+  ButtonIndex: 1
+  _testTwoControllers: 0
 --- !u!114 &172968274
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -479,7 +492,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 172968275}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 172968273}
+        m_MethodName: ChooseAFish
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &172968275
@@ -638,6 +662,7 @@ GameObject:
   - component: {fileID: 245105292}
   - component: {fileID: 245105294}
   - component: {fileID: 245105295}
+  - component: {fileID: 245105296}
   m_Layer: 5
   m_Name: Start
   m_TagString: Untagged
@@ -709,12 +734,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 1
+    m_Mode: 2
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 2
+  m_Transition: 3
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -761,6 +786,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ButtonIndex: 0
+  _testTwoControllers: 0
+--- !u!95 &245105296
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 245105290}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8469a551ae2c17a4cbf568807974d31c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &254861430
 GameObject:
   m_ObjectHideFlags: 0
@@ -1458,7 +1502,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8b41945ab81c0043bf0b1df36f2cdc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ButtonIndex: 0
+  ButtonIndex: 3
+  _testTwoControllers: 0
 --- !u!114 &1124517147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1497,7 +1542,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1124517148}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1124517146}
+        m_MethodName: ChooseAFish
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1124517148
@@ -1567,7 +1623,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 146.69797, y: 0}
+  m_AnchoredPosition: {x: 146.69824, y: 0}
   m_SizeDelta: {x: -266.89417, y: -149.99997}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1377592071
@@ -1783,7 +1839,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8b41945ab81c0043bf0b1df36f2cdc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ButtonIndex: 0
+  ButtonIndex: 4
+  _testTwoControllers: 0
 --- !u!114 &1732865257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1822,7 +1879,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1732865258}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1732865256}
+        m_MethodName: ChooseAFish
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1732865258

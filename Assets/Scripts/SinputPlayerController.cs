@@ -28,7 +28,9 @@ public class SinputPlayerController : MonoBehaviour
 
 		if (PlayerNumber == 2)
 		{
-			_playerAxis = Sinput.GetVector("Horizontal", "Vertical", _playerSlot2) * Time.deltaTime * 50f;
+			_playerAxis = new Vector2(Input.GetAxis("Horizontal"),Input.GetAxis("Vertical") * Time.deltaTime * 50f);
+			//_playerAxis = Sinput.GetVector("Horizontal", "Vertical", _playerSlot2) * Time.deltaTime * 50f;
+			
 		}
 		if (!_forceAdded)
 		{

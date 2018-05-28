@@ -39,9 +39,9 @@ public class StartMenuUiInput : MonoBehaviour
 		switch (StartMenuIndex)
 		{
 			case 0:
-				MainStartButtons[0].rectTransform.localScale = _highlightedSize;
+				/*MainStartButtons[0].rectTransform.localScale = _highlightedSize;
 				MainStartButtons[1].rectTransform.localScale = _smallSize;
-				MainStartButtons[2].rectTransform.localScale = _smallSize;
+				MainStartButtons[2].rectTransform.localScale = _smallSize;*/
 				MainStartButtons[0].color = _highlightedColor;
 				MainStartButtons[1].color = Color.white;
 				MainStartButtons[2].color = Color.white;
