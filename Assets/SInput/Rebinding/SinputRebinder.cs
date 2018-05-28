@@ -28,42 +28,23 @@ namespace SinputSystems.Rebinding{
 
 		void Init () {
 			//Debug.Log("Loading Default controls");
-			Sinput.LoadControlScheme(Sinput.controlScheme,false);
-			Control[] sinputControls = Sinput.GetControls();
-			controlsDefaults = new Control[sinputControls.Length];
-			for (int i=0; i<sinputControls.Length; i++){
-				controlsDefaults[i] = new Control(sinputControls[i].name);
-				for (int k=0; k<sinputControls[i].commonBindings.Count; k++){
-					controlsDefaults[i].commonBindings.Add( sinputControls[i].commonBindings[k] );
-				}
-
-				controlsDefaults[i].inputs = new List<DeviceInput>();
-				for (int k=0; k<sinputControls[i].inputs.Count; k++){
-					controlsDefaults[i].inputs.Add( sinputControls[i].inputs[k] );
-				}
-			}
-
+			Sinput.LoadControlScheme("MainControlScheme", false);
+			controlsDefaults = Sinput.controls;
+			
 			//Debug.Log("loading controls with saved data");
-			Sinput.LoadControlScheme(Sinput.controlScheme,true);
-			sinputControls = Sinput.GetControls();
-			controls = new Control[sinputControls.Length];
-			for (int i=0; i<sinputControls.Length; i++){
-				controls[i] = new Control(sinputControls[i].name);
-				for (int k=0; k<sinputControls[i].commonBindings.Count; k++){
-					controls[i].commonBindings.Add( sinputControls[i].commonBindings[k] );
-				}
+			Sinput.LoadControlScheme("MainControlScheme", true);
+			controls = Sinput.controls;
 
-				controls[i].inputs = new List<DeviceInput>();
-				for (int k=0; k<sinputControls[i].inputs.Count; k++){
-					controls[i].inputs.Add( sinputControls[i].inputs[k] );
-				}
-			}
+			recordedPads = Sinput.gamepads;
+
+			//Debug.Log("It should be over?");
+			
+
 
 			BuildRebindingPanels();
 		}
 
-
-
+		
 		private bool rebinding = false;
 		private int rebindingFrames=0;
 		private int rebindingControlIndex=-1;
@@ -76,7 +57,7 @@ namespace SinputSystems.Rebinding{
 			
 
 			bool gamepadsChanged = false;
-			string[] gamepads = Sinput.GetGamepads();
+			string[] gamepads = Sinput.gamepads;
 			if (recordedPads.Length!=gamepads.Length) gamepadsChanged = true;
 			if (!gamepadsChanged){
 				for (int i=0; i<recordedPads.Length; i++){
@@ -87,7 +68,9 @@ namespace SinputSystems.Rebinding{
 				//connected gamepads have changed
 				rebinding = false;
 
-				recordedPads = Sinput.GetGamepads();
+				//Debug.Log("Gamepads changed!");
+
+				recordedPads = Sinput.gamepads;
 				Init();
 				return;
 			}
@@ -129,7 +112,7 @@ namespace SinputSystems.Rebinding{
 				DeviceInput newInput = new DeviceInput(changedInputType);
 				newInput.isCustom = true;
 				newInput.deviceName = rebindingDevice;
-				newInput.commonBindingType = CommonGamepadInputs.NOBUTTON;//don't remove this input when gamepads are unplugged/replugged
+				newInput.commonMappingType = CommonGamepadInputs.NOBUTTON;//don't remove this input when gamepads are unplugged/replugged
 
 				if (changedInputType == InputDeviceType.Keyboard){
 					newInput.keyboardKeyCode = inputMonitor.changedKey;
@@ -191,14 +174,14 @@ namespace SinputSystems.Rebinding{
 					//this should preserve stuff with the same common binding from being ignored when re reload common bindings
 					for (int i=0; i<controls[rebindingControlIndex].inputs.Count; i++){
 						bool sameDevice = false;
-						if (controls[rebindingControlIndex].inputs[i].commonBindingType != CommonGamepadInputs.NOBUTTON){
+						if (controls[rebindingControlIndex].inputs[i].commonMappingType != CommonGamepadInputs.NOBUTTON){
 							for (int k=0; k<controls[rebindingControlIndex].inputs[i].allowedSlots.Length; k++){
 								if (controls[rebindingControlIndex].inputs[i].allowedSlots[k] == padIndex) sameDevice = true;
 							}
 						}
 						if (sameDevice){
 							controls[rebindingControlIndex].inputs[i].isCustom = true;
-							controls[rebindingControlIndex].inputs[i].commonBindingType = CommonGamepadInputs.NOBUTTON;
+							controls[rebindingControlIndex].inputs[i].commonMappingType = CommonGamepadInputs.NOBUTTON;
 							controls[rebindingControlIndex].inputs[i].deviceName = rebindingDevice;
 
 							/*List<int> slots = new List<int>();
@@ -229,8 +212,7 @@ namespace SinputSystems.Rebinding{
 			Init();
 		}
 		public void Apply(){
-			
-			SinputFileIO.DeleteSavedControls();
+
 			SinputFileIO.SaveControls(controls);
 			Init();
 		}
@@ -333,7 +315,7 @@ namespace SinputSystems.Rebinding{
 
 			newInput.isCustom = true;
 			newInput.deviceName = deviceName;
-			newInput.commonBindingType = CommonGamepadInputs.NOBUTTON;//don't remove this input when gamepads are unplugged/replugged
+			newInput.commonMappingType = CommonGamepadInputs.NOBUTTON;//don't remove this input when gamepads are unplugged/replugged
 
 			if (t == InputDeviceType.Keyboard){
 				newInput.keyboardKeyCode = KeyCode.None;
@@ -374,7 +356,7 @@ namespace SinputSystems.Rebinding{
 			AddDevicePanel(InputDeviceType.Keyboard, "KeyboardMouse", -1);
 
 			//add gamepad device panels
-			string[] pads = Sinput.GetGamepads();
+			string[] pads = Sinput.gamepads;
 			for (int p=0; p<pads.Length; p++){
 				bool deviceAlreadyListed = false;
 				for (int d=0; d<devicePanels.Count; d++){

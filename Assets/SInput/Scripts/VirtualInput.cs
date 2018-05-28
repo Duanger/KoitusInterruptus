@@ -95,6 +95,8 @@ namespace SinputSystems {
 		}
 
 		public void UpdateButtonState(bool held) {
+			axisValue = 0f;
+			if (held) axisValue = 1f;
 
 			if (!held) {
 				switch (buttonState) {
@@ -125,10 +127,19 @@ namespace SinputSystems {
 		}
 
 		public void SetButtonState(ButtonAction newState) {
+			axisValue = 0f;
+			if (newState == ButtonAction.HELD || newState==ButtonAction.DOWN) axisValue = 1f;
+
 			buttonState = newState;
 		}
 
 		public void SetAxisValue(float newValue) {
+			if (newValue > 0.4f) {
+				UpdateButtonState(true);
+			} else {
+				UpdateButtonState(false);
+			}
+
 			axisValue = newValue;
 		}
 

@@ -1,22 +1,22 @@
 ~~~~~~~~~~ Sophie's Dev Notes: ~~~~~~~~~~
 
 priority to-do for future versions:
-TODO: prefab touch joystick/buttons that can be bound to virtual controls (and instead of custom rebind, can be moved,scaled,rotated)
-TODO: also possible touch control prefabs; swipe listener that can act as left/right/up/down buttons, pinch-zoom axis, and any other gestures I can think of
-TODO: Sinput-version of unity's Standalone Input Module, so sinput inputs can navigate unity UI interactibes
 TODO: tidy up the whole initialisation process, it's kind of a nightmare and is probably full of redundant stuff
 TODO: support for multiple control schemes and saved custom control schemes
+TODO: Sinput-version of unity's Standalone Input Module, so sinput inputs can navigate unity UI interactibes
 TODO: be able to bind modifier keys (and gamepad buttons), eg shift+a, LB+dpadLeft ?
 TODO: optimisation might be good to do, sometime
 TODO: optimnise axis button states so they are updated when an input is checked at the start of a frame
 TODO: figure out wtf is the deal with the "" gamepad on windows after disconnecting a gamepad
 TODO: make clear video documentation, and SUBTITLE it
 TODO: virtual slots for virtual inputs
-TODO: get undo/redo to work with inspector changes for control schemes and custom bindings
-
+TODO: get undo/redo to work with inspector changes for control schemes and common mappings
+TODO: add stuff about virtual inputs to docs at some point
 TODO: Make better example scenes showing all key features
 TODO: If a control has an analogue input and a button input of the same name (eg som pads have a triger axis AND trigger button), favour the analogue in GetAxis(), and favour the button in GetButton()
-TODO: Make sure every function that takes a control name or smart control name throws an error if that name isn't found
+TODO: make it so touchscreen controls can be repositioned and rescaled
+TODO: other possible touch control prefabs; swipe listener that can act as left/right/up/down buttons, pinch-zoom axis, and any other gestures I can think of
+TODO: make it so foldouts in control scheme editor work by clicking on foldout name and not just the foldout arrow thing
 
 Saving to-do:
 TODO: save each control's toggle setting
@@ -40,16 +40,32 @@ future feature wishlist/to-do
  - force feedback
  - find ways of supporting more gamepads?
  - have multiple slots for a single keyboard so two players can share?
- - 
+
 
  other ideas:
  - common shortcut to bring up rebind menu, loads the rebind scene additively and ignores other sinput calls until the menu is closed
  
 
 
-
  
  ~~~~~~~~~~ Changelog: ~~~~~~~~~~
+
+ 2018_D (28/05/18)
+   - Version names now have an underscore in them to make them easier to read. Big change, I know.
+   - Removed GetControls() - instead use Sinput.controls to get a copy of all the rebindable controls instead. (the old function gave a reference I mean thats just no good)
+   - SetControls() is gone too, it wasn't used (I think LoadControlScheme is gonna be the way to do it?)
+   - Improved initialisation process... somewhat
+   - can now set default inversion setting for smart controls in the editor
+   - Removed GetGamepads() - use Sinput.gamepads instead.
+   - Improved virtual inputs so setting axis value also sets button state, and setting button state sets axis value
+   - GetSlotPress() can now return virtual slots
+   - Added touchscreen button & joystick prefabs
+   - Some minor optimisations
+   - Now every function that takes a control or smart control as a parameter will log an error if that control/smart control isn't found
+   - Made mouse movement rebind check a lot less sensitive
+   - Newly created control scheme assets now have default controls & smart controls
+   - "Common Binding" is now "Common Mapping". A terminology change so gamepad mapping is distinct from binding/rebinding. (mapping = controller layout, binding = which input is linked to a control)
+   - Added common mapping for Rock Band Guitar. \m/ (-_-) \m/
 
  2018C (25/05/18)
    - A dialogue is displayed to confirm generating new Input Manager axis, and the changes update immediately in the editor

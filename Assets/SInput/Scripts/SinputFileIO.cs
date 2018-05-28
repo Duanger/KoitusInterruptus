@@ -21,9 +21,9 @@ namespace SinputSystems{
 			List<Control> controls = new List<Control>();
 			for (int c=0; c<schemeToReplace.Length; c++){
 				controls.Add( new Control(schemeToReplace[c].name) );
-				controls[c].commonBindings = new List<CommonGamepadInputs>();
-				for (int b=0; b<schemeToReplace[c].commonBindings.Count; b++){
-					controls[c].commonBindings.Add(schemeToReplace[c].commonBindings[b]);
+				controls[c].commonMappings = new List<CommonGamepadInputs>();
+				for (int b=0; b<schemeToReplace[c].commonMappings.Count; b++){
+					controls[c].commonMappings.Add(schemeToReplace[c].commonMappings[b]);
 				}
 			}
 
@@ -110,7 +110,7 @@ namespace SinputSystems{
 			}
 
 			//lets not forget stuff that isn't saved, but needed anyway
-			newInput.commonBindingType = CommonGamepadInputs.NOBUTTON;
+			newInput.commonMappingType = CommonGamepadInputs.NOBUTTON;
 			newInput.defaultAxisValue = 0f;
 			if (t==InputDeviceType.GamepadAxis || t==InputDeviceType.GamepadButton){
 				List<int> allowedSlots = new List<int>();

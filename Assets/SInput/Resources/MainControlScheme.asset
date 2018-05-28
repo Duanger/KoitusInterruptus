@@ -14,30 +14,34 @@ MonoBehaviour:
   controls:
   - name: Left
     keyboardInputs: 0500000004000000
-    gamepadInputs: 0f000000130000000b000000
-    mouseInputs: 
-    virtualInputs: []
-  - name: Right
-    keyboardInputs: 0800000003000000
-    gamepadInputs: 10000000140000000c000000
+    gamepadInputs: 0f0000000b000000
     mouseInputs: 
     virtualInputs:
-    - sintime
+    - Touch_LEFT
+  - name: Right
+    keyboardInputs: 0800000003000000
+    gamepadInputs: 100000000c000000
+    mouseInputs: 
+    virtualInputs:
+    - Touch_RIGHT
   - name: Up
     keyboardInputs: 1b00000001000000
-    gamepadInputs: 11000000150000000d000000
+    gamepadInputs: 110000000d000000
     mouseInputs: 
-    virtualInputs: []
+    virtualInputs:
+    - Touch_UP
   - name: Down
     keyboardInputs: 1700000002000000
-    gamepadInputs: 12000000160000000e000000
+    gamepadInputs: 120000000e000000
     mouseInputs: 
-    virtualInputs: []
+    virtualInputs:
+    - Touch_DOWN
   - name: Jump
     keyboardInputs: 33000000
     gamepadInputs: 01000000
     mouseInputs: 
-    virtualInputs: []
+    virtualInputs:
+    - Touch_JUMP
   - name: Fire1
     keyboardInputs: 22000000
     gamepadInputs: 08000000
@@ -87,7 +91,8 @@ MonoBehaviour:
     keyboardInputs: 30000000
     gamepadInputs: 17000000
     mouseInputs: 
-    virtualInputs: []
+    virtualInputs:
+    - Touch_JOIN
   smartControls:
   - name: Horizontal
     positiveControl: Right
@@ -97,6 +102,7 @@ MonoBehaviour:
     speed: 3
     snap: 0
     scale: 1
+    invert: 0
   - name: Vertical
     positiveControl: Up
     negativeControl: Down
@@ -105,6 +111,7 @@ MonoBehaviour:
     speed: 3
     snap: 0
     scale: 1
+    invert: 0
   - name: Look Horizontal
     positiveControl: Look Right
     negativeControl: Look Left
@@ -113,6 +120,7 @@ MonoBehaviour:
     speed: 3
     snap: 0
     scale: 1
+    invert: 0
   - name: Look Vertical
     positiveControl: Look Up
     negativeControl: Look Down
@@ -121,3 +129,4 @@ MonoBehaviour:
     speed: 3
     snap: 0
     scale: 1
+    invert: 0

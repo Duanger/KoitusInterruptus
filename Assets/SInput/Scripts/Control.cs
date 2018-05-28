@@ -13,7 +13,7 @@ namespace SinputSystems{
 		//list of inputs we will check when the control is polled
 		public List<DeviceInput> inputs;
 
-		public List<CommonGamepadInputs> commonBindings = new List<CommonGamepadInputs>();
+		public List<CommonGamepadInputs> commonMappings = new List<CommonGamepadInputs>();
 
 		//control constructor
 		public Control(string controlName){
@@ -39,7 +39,7 @@ namespace SinputSystems{
 
 			//do update here
 			bool checkslot = false;
-			int connectedGamepads = Sinput.GetGamepads().Length;
+			int connectedGamepads = Sinput.gamepads.Length;
 			for (int i = 1; i < controlStates.Length; i++) {
 				checkslot = false;
 				if (i <= connectedGamepads) checkslot = true; // slot represents a connected pad
@@ -182,7 +182,7 @@ namespace SinputSystems{
 		public void AddKeyboardInput(KeyCode keyCode){
 			DeviceInput input = new DeviceInput(InputDeviceType.Keyboard);
 			input.keyboardKeyCode = keyCode;
-			input.commonBindingType = CommonGamepadInputs.NOBUTTON;//don't remove this input when gamepads are unplugged/replugged
+			input.commonMappingType = CommonGamepadInputs.NOBUTTON;//don't remove this input when gamepads are unplugged/replugged
 			inputs.Add(input);
 		}
 
@@ -190,12 +190,12 @@ namespace SinputSystems{
 		private void AddGamepadInput(CommonGamepadInputs gamepadButtonOrAxis, bool isNewBinding){
 			Sinput.CheckGamepads();
 
-			if (isNewBinding) commonBindings.Add(gamepadButtonOrAxis);
-			List<DeviceInput> applicableMapInputs = CommonGamepadBindings.GetApplicableMaps( gamepadButtonOrAxis, Sinput.GetGamepads() );
+			if (isNewBinding) commonMappings.Add(gamepadButtonOrAxis);
+			List<DeviceInput> applicableMapInputs = CommonGamepadMappings.GetApplicableMaps( gamepadButtonOrAxis, Sinput.gamepads );
 
-			string[] gamepads = Sinput.GetGamepads();
+			string[] gamepads = Sinput.gamepads;
 
-			//find which common bound inputs apply here, but already have custom binding loaded, and disregard those common bindings
+			//find which common mapped inputs apply here, but already have custom binding loaded, and disregard those common mappings
 			for (int ai=0; ai<applicableMapInputs.Count; ai++){
 				bool samePad = false;
 				for (int i=0; i<inputs.Count; i++){
@@ -205,13 +205,13 @@ namespace SinputSystems{
 								for (int toomanyints=0; toomanyints<inputs[i].allowedSlots.Length; toomanyints++){
 									if (applicableMapInputs[ai].allowedSlots[ais] == inputs[i].allowedSlots[toomanyints]) samePad = true;
 								}
-								if (gamepads[applicableMapInputs[ai].allowedSlots[ais]].ToUpper() == inputs[i].deviceName.ToUpper()) samePad = true;
+								if (gamepads[applicableMapInputs[ai].allowedSlots[ais]] == inputs[i].deviceName.ToUpper()) samePad = true;
 							}
 							if (samePad){
 								//if I wanna be copying input display names, here's the place to do it
 								//TODO: decide if I wanna do this
-								//pro: it's good if the common binding is accurate but the user wants to rebind
-								//con: it's bad if the common binding is bad or has a generic gamepad name and so it mislables different inputs
+								//pro: it's good if the common mapping is accurate but the user wants to rebind
+								//con: it's bad if the common mapping is bad or has a generic gamepad name and so it mislables different inputs
 								//maybe I should do this, but with an additional check so it's not gonna happen with say, a device labelled "wireless controller"?
 							}
 						}
@@ -224,7 +224,7 @@ namespace SinputSystems{
 				}
 			}
 
-			//add whichever common bindings still apply
+			//add whichever common mappings still apply
 			for (int i=0; i<applicableMapInputs.Count; i++){
 				inputs.Add(applicableMapInputs[i]);
 			}
@@ -233,22 +233,22 @@ namespace SinputSystems{
 		public void AddMouseInput(MouseInputType mouseInputType){
 			DeviceInput input = new DeviceInput(InputDeviceType.Mouse);
 			input.mouseInputType = mouseInputType;
-			input.commonBindingType = CommonGamepadInputs.NOBUTTON;
+			input.commonMappingType = CommonGamepadInputs.NOBUTTON;
 			inputs.Add(input);
 		}
 
 		public void AddVirtualInput(string virtualInputID){
 			DeviceInput input = new DeviceInput(InputDeviceType.Virtual);
 			input.virtualInputID = virtualInputID;
-			input.commonBindingType = CommonGamepadInputs.NOBUTTON;
+			input.commonMappingType = CommonGamepadInputs.NOBUTTON;
 			inputs.Add(input);
 			VirtualInputs.AddInput(virtualInputID);
 		}
 
 		public void ReapplyCommonBindings(){
-			//connected gamepads have changed, so we want to remove all old common bindings, and replace them now new binding information has been loaded
+			//connected gamepads have changed, so we want to remove all old common bindings, and replace them now new mapping information has been loaded
 			for (int i=0; i<inputs.Count; i++){
-				if (inputs[i].commonBindingType != CommonGamepadInputs.NOBUTTON){
+				if (inputs[i].commonMappingType != CommonGamepadInputs.NOBUTTON){
 					inputs.RemoveAt(i);
 					i--;
 				}
@@ -256,20 +256,39 @@ namespace SinputSystems{
 
 
 
-			for (int i=0; i<commonBindings.Count; i++){
-				AddGamepadInput(commonBindings[i], false);
+			for (int i=0; i<commonMappings.Count; i++){
+				AddGamepadInput(commonMappings[i], false);
 			}
 
 			//also recheck allowed slots for custom bound pads (their inputs have a device name, common bound stuff don't)
 			//need to do this anyway so we can check if common & custom bindings are about to match on the same slot
-			string[] gamepads= Sinput.GetGamepads();
+			string[] gamepads= Sinput.gamepads;
 			for (int i=0; i<inputs.Count; i++){
 				if (inputs[i].deviceName!=""){
 					List<int> allowedSlots = new List<int>();
 					for (int g=0; g<gamepads.Length; g++){
-						if (gamepads[g].ToUpper() == inputs[i].deviceName.ToUpper()) allowedSlots.Add(i);
+						if (gamepads[g] == inputs[i].deviceName.ToUpper()) allowedSlots.Add(i);
 					}
 					inputs[i].allowedSlots = allowedSlots.ToArray();
+				}
+			}
+		}
+
+		public void SetAllowedInputSlots() {
+			//custom gamepad inputs need to know which gamepad slots they can look at to match the gamepad they are for
+			for (int i = 0; i < inputs.Count; i++) {
+				if (inputs[i].isCustom) {
+					if (inputs[i].inputType == InputDeviceType.GamepadAxis || inputs[i].inputType == InputDeviceType.GamepadButton) {
+						//Debug.Log("Finding slot for gamepad: " + controls[c].inputs[i].displayName + " of " + controls[c].inputs[i].deviceName);
+						//find applicable gamepad slots for this device
+						List<int> allowedSlots = new List<int>();
+						for (int g = 0; g < Sinput.gamepads.Length; g++) {
+							if (Sinput.gamepads[g] == inputs[i].deviceName.ToUpper()) {
+								allowedSlots.Add(g);
+							}
+						}
+						inputs[i].allowedSlots = allowedSlots.ToArray();
+					}
 				}
 			}
 		}

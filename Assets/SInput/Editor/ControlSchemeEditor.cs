@@ -392,7 +392,7 @@ public class ControlSchemeEditor : Editor {
 
 					activeSmartControl.snap = EditorGUILayout.Toggle("Snap", activeSmartControl.snap);
 					activeSmartControl.scale = EditorGUILayout.FloatField("Scale", activeSmartControl.scale);
-
+					activeSmartControl.invert = EditorGUILayout.Toggle("Invert", activeSmartControl.invert);
 					EditorGUILayout.Space();
 
 				}

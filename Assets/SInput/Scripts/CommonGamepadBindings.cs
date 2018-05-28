@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace SinputSystems {
-	public static class CommonGamepadBindings {
+	public static class CommonGamepadMappings {
 
 
-		static List<CommonBinding> commonBindings;
-		static BindingSlots[] bindingSlots;
+		static List<CommonMapping> commonMappings;
+		static MappingSlots[] mappingSlots;
 
 		public static void ReloadCommonMaps() {
 			//called when gamepads are plugged in or removed, also when Sinput is first called
@@ -28,82 +28,81 @@ namespace SinputSystems {
 			if (Application.platform == RuntimePlatform.XboxOne) thisOS = OSFamily.XboxOne;
 			if (Application.platform == RuntimePlatform.Switch) thisOS = OSFamily.Switch;
 
-			System.Object[] commonBindingAssets = Resources.LoadAll("", typeof(CommonBinding));
-			commonBindings = new List<CommonBinding>();
-			//List<CommonBinding> partialMatchBindings = new List<CommonBinding>();
-			string[] gamepads = Sinput.GetGamepads();
-			int defaultBindingIndex = -1;
-			for (int i = 0; i < commonBindingAssets.Length; i++) {
-				if (((CommonBinding)commonBindingAssets[i]).os == thisOS) {
+			System.Object[] commonMappingAssets = Resources.LoadAll("", typeof(CommonMapping));
+			commonMappings = new List<CommonMapping>();
+			string[] gamepads = Sinput.gamepads;
+			int defaultMappingIndex = -1;
+			for (int i = 0; i < commonMappingAssets.Length; i++) {
+				if (((CommonMapping)commonMappingAssets[i]).os == thisOS) {
 					bool gamepadConnected = false;
 					bool partialMatch = false;
-					for (int k = 0; k < ((CommonBinding)commonBindingAssets[i]).names.Count; k++) {
+					for (int k = 0; k < ((CommonMapping)commonMappingAssets[i]).names.Count; k++) {
 						for (int g = 0; g < gamepads.Length; g++) {
-							if (((CommonBinding)commonBindingAssets[i]).names[k].ToUpper() == gamepads[g]) gamepadConnected = true;
+							if (((CommonMapping)commonMappingAssets[i]).names[k].ToUpper() == gamepads[g]) gamepadConnected = true;
 						}
 					}
 
-					for (int k = 0; k < ((CommonBinding)commonBindingAssets[i]).partialNames.Count; k++) {
+					for (int k = 0; k < ((CommonMapping)commonMappingAssets[i]).partialNames.Count; k++) {
 						for (int g = 0; g < gamepads.Length; g++) {
-							if (gamepads[g].Contains(((CommonBinding)commonBindingAssets[i]).partialNames[k].ToUpper())) partialMatch = true;
+							if (gamepads[g].Contains(((CommonMapping)commonMappingAssets[i]).partialNames[k].ToUpper())) partialMatch = true;
 						}
 					}
 
-					if (gamepadConnected) commonBindings.Add((CommonBinding)commonBindingAssets[i]);
-					if (partialMatch && !gamepadConnected) commonBindings.Add((CommonBinding)commonBindingAssets[i]);
-					if (!partialMatch && !gamepadConnected && ((CommonBinding)commonBindingAssets[i]).isDefault) commonBindings.Add((CommonBinding)commonBindingAssets[i]);
+					if (gamepadConnected) commonMappings.Add((CommonMapping)commonMappingAssets[i]);
+					if (partialMatch && !gamepadConnected) commonMappings.Add((CommonMapping)commonMappingAssets[i]);
+					if (!partialMatch && !gamepadConnected && ((CommonMapping)commonMappingAssets[i]).isDefault) commonMappings.Add((CommonMapping)commonMappingAssets[i]);
 
-					if (((CommonBinding)commonBindingAssets[i]).isDefault) defaultBindingIndex = commonBindings.Count - 1;
+					if (((CommonMapping)commonMappingAssets[i]).isDefault) defaultMappingIndex = commonMappings.Count - 1;
 				}
 			}
 
 
 
-			//for each common binding, find which gamepad slots it applies to
-			//inputs built from common bindings will only check slots which match
-			bindingSlots = new BindingSlots[commonBindings.Count];
-			for (int i = 0; i < bindingSlots.Length; i++) {
-				bindingSlots[i].slots = new List<int>();
+			//for each common mapping, find which gamepad slots it applies to
+			//inputs built from common mappings will only check slots which match
+			mappingSlots = new MappingSlots[commonMappings.Count];
+			for (int i = 0; i < mappingSlots.Length; i++) {
+				mappingSlots[i].slots = new List<int>();
 			}
 			//string[] gamepads = Sinput.GetGamepads();
-			for (int i = 0; i < commonBindings.Count; i++) {
-				for (int k = 0; k < commonBindings[i].names.Count; k++) {
+			for (int i = 0; i < commonMappings.Count; i++) {
+				for (int k = 0; k < commonMappings[i].names.Count; k++) {
 					for (int g = 0; g < gamepads.Length; g++) {
-						if (gamepads[g] == commonBindings[i].names[k].ToUpper()) {
-							bindingSlots[i].slots.Add(g);
+						if (gamepads[g] == commonMappings[i].names[k].ToUpper()) {
+							mappingSlots[i].slots.Add(g);
 						}
 					}
 				}
 			}
 
-			//find out if there are any connected gamepads that dont match anything in bindingSlots
+			//find out if there are any connected gamepads that dont match anything in mappingSlots
 			//then find 
 			for (int g = 0; g < gamepads.Length; g++) {
-				bool bindingMatch = false;
-				for (int b = 0; b < bindingSlots.Length; b++) {
-					for (int s = 0; s < bindingSlots[b].slots.Count; s++) {
-						if (bindingSlots[b].slots[s] == g) bindingMatch = true;
+				bool mappingMatch = false;
+				for (int b = 0; b < mappingSlots.Length; b++) {
+					for (int s = 0; s < mappingSlots[b].slots.Count; s++) {
+						if (mappingSlots[b].slots[s] == g) mappingMatch = true;
 					}
 				}
-				if (!bindingMatch) {
+				if (!mappingMatch) {
 					//check for partial name matches with this gamepad slot
-					for (int i = 0; i < commonBindings.Count; i++) {
-						for (int k = 0; k < commonBindings[i].partialNames.Count; k++) {
-							if (!bindingMatch && gamepads[g].Contains(commonBindings[i].partialNames[k])) {
-								bindingMatch = true;
-								bindingSlots[i].slots.Add(g);
+					for (int i = 0; i < commonMappings.Count; i++) {
+						for (int k = 0; k < commonMappings[i].partialNames.Count; k++) {
+							if (!mappingMatch && gamepads[g].Contains(commonMappings[i].partialNames[k])) {
+								mappingMatch = true;
+								mappingSlots[i].slots.Add(g);
 							}
 						}
 					}
-					if (!bindingMatch && defaultBindingIndex != -1) {
-						//apply default common binding to this slot
-						bindingSlots[defaultBindingIndex].slots.Add(g);
+					if (!mappingMatch && defaultMappingIndex != -1) {
+						//apply default common mapping to this slot
+						mappingSlots[defaultMappingIndex].slots.Add(g);
 					}
 				}
 			}
 
 		}
-		struct BindingSlots {
+		struct MappingSlots {
 			public List<int> slots;
 		}
 
@@ -115,43 +114,41 @@ namespace SinputSystems {
 			List<DeviceInput> applicableInputs = new List<DeviceInput>();
 
 
-			for (int i = 0; i < commonBindings.Count; i++) {
+			for (int i = 0; i < commonMappings.Count; i++) {
 
 				//add any applicable button mappings
-				for (int k = 0; k < commonBindings[i].buttons.Count; k++) {
-					if (commonBindings[i].buttons[k].buttonType == t) {
+				for (int k = 0; k < commonMappings[i].buttons.Count; k++) {
+					if (commonMappings[i].buttons[k].buttonType == t) {
 						//add this button input
 						DeviceInput newInput = new DeviceInput(InputDeviceType.GamepadButton);
-						//newInput.gamepadNames = commonBindings[i].names.ToArray();
-						newInput.gamepadButtonNumber = commonBindings[i].buttons[k].buttonNumber;
-						newInput.commonBindingType = t;
-						newInput.displayName = commonBindings[i].buttons[k].displayName;
+						newInput.gamepadButtonNumber = commonMappings[i].buttons[k].buttonNumber;
+						newInput.commonMappingType = t;
+						newInput.displayName = commonMappings[i].buttons[k].displayName;
 
-						newInput.allowedSlots = bindingSlots[i].slots.ToArray();
+						newInput.allowedSlots = mappingSlots[i].slots.ToArray();
 
 						applicableInputs.Add(newInput);
 					}
 				}
 				//add any applicable axis bingings
-				for (int k = 0; k < commonBindings[i].axis.Count; k++) {
-					if (commonBindings[i].axis[k].buttonType == t) {
+				for (int k = 0; k < commonMappings[i].axis.Count; k++) {
+					if (commonMappings[i].axis[k].buttonType == t) {
 						//add this axis input
 						DeviceInput newInput = new DeviceInput(InputDeviceType.GamepadAxis);
-						//newInput.gamepadNames = commonBindings[i].names.ToArray();
-						newInput.gamepadAxisNumber = commonBindings[i].axis[k].axisNumber;
-						newInput.commonBindingType = t;
-						newInput.displayName = commonBindings[i].axis[k].displayName;
-						newInput.invertAxis = commonBindings[i].axis[k].invert;
-						newInput.clampAxis = commonBindings[i].axis[k].clamp;
-						newInput.axisButtoncompareVal = commonBindings[i].axis[k].compareVal;
-						newInput.defaultAxisValue = commonBindings[i].axis[k].defaultVal;
+						newInput.gamepadAxisNumber = commonMappings[i].axis[k].axisNumber;
+						newInput.commonMappingType = t;
+						newInput.displayName = commonMappings[i].axis[k].displayName;
+						newInput.invertAxis = commonMappings[i].axis[k].invert;
+						newInput.clampAxis = commonMappings[i].axis[k].clamp;
+						newInput.axisButtoncompareVal = commonMappings[i].axis[k].compareVal;
+						newInput.defaultAxisValue = commonMappings[i].axis[k].defaultVal;
 
-						newInput.allowedSlots = bindingSlots[i].slots.ToArray();
+						newInput.allowedSlots = mappingSlots[i].slots.ToArray();
 
-						if (commonBindings[i].axis[k].rescaleAxis) {
+						if (commonMappings[i].axis[k].rescaleAxis) {
 							newInput.rescaleAxis = true;
-							newInput.rescaleAxisMin = commonBindings[i].axis[k].rescaleAxisMin;
-							newInput.rescaleAxisMax = commonBindings[i].axis[k].rescaleAxisMax;
+							newInput.rescaleAxisMin = commonMappings[i].axis[k].rescaleAxisMin;
+							newInput.rescaleAxisMax = commonMappings[i].axis[k].rescaleAxisMax;
 						}
 
 						applicableInputs.Add(newInput);

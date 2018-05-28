@@ -26,7 +26,7 @@ namespace SinputSystems.Rebinding{
 			
 		}
 
-		int mouseMovementMin = 10;
+		int mouseMovementMin = 50;
 		public void ResetMouseListening() {
 			mouseHorizontalTotal = 0f;
 			mouseVerticalTotal = 0f;

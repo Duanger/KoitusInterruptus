@@ -40,7 +40,7 @@ namespace SinputSystems{
 
 		//////////// ~ gamepad specific stuff ~ ////////////
 		public int[] allowedSlots; //list of gamepad slots that this input is allowed to check (they will be ones with a matching name to the known binding
-		public CommonGamepadInputs commonBindingType; //if this is set, this input is a preset/default
+		public CommonGamepadInputs commonMappingType; //if this is set, this input is a preset/default
 		public int gamepadButtonNumber; //button number for if this input is controlled by a gamepad button
 
 		public int gamepadAxisNumber; //axis number for if this input is controlled by a gamepad axis
@@ -90,7 +90,7 @@ namespace SinputSystems{
 				int slotIndex = ((int)slot)-1;
 
 				//don't check slots without a connected gamepad
-				if (Sinput.GetGamepads().Length<=slotIndex) return false;
+				if (Sinput.gamepads.Length<=slotIndex) return false;
 
 				//make sure the gamepad in this slot is one this input is allowed to check (eg don't check PS4 pad bindings for an XBOX pad)
 				bool allowInputFromThisPad=false;
@@ -181,7 +181,7 @@ namespace SinputSystems{
 				//if checking any slot, call this function for each possible slot
 				if (slot == InputDeviceSlot.any){
 					float greatestV = 0f;
-					for (int i=1; i<=Sinput.GetGamepads().Length; i++){
+					for (int i=1; i<=Sinput.gamepads.Length; i++){
 						greatestV = Mathf.Max(greatestV, Mathf.Abs( AxisCheck((InputDeviceSlot)i) ));
 					}
 					return greatestV;
@@ -192,7 +192,7 @@ namespace SinputSystems{
 
 
 				//don't check slots without a connected gamepad
-				if (Sinput.GetGamepads().Length<=slotIndex) return 0f;
+				if (Sinput.gamepads.Length<=slotIndex) return 0f;
 
 				//make sure the gamepad in this slot is one this input is allowed to check (eg don't check PS4 pad bindings for an XBOX pad)
 				bool allowInputFromThisPad=false;
@@ -295,7 +295,7 @@ namespace SinputSystems{
 			if (inputType == InputDeviceType.GamepadAxis){
 				float axisValue;
 				bool held;
-				for (int i=1; i<=Sinput.GetGamepads().Length; i++){
+				for (int i=1; i<=Sinput.gamepads.Length; i++){
 					axisValue = AxisCheck( (InputDeviceSlot)i );
 					held = false;
 					if (axisValue>axisButtoncompareVal) held = true;
@@ -323,11 +323,11 @@ namespace SinputSystems{
 		public void ResetAxisButtonStates(){
 
 			if (inputType == InputDeviceType.GamepadAxis){
-				if (null==axisButtonState || axisButtonState.Length != Sinput.GetGamepads().Length+1){
-					axisButtonState = new ButtonAction[Sinput.GetGamepads().Length+1];
+				if (null==axisButtonState || axisButtonState.Length != Sinput.gamepads.Length+1){
+					axisButtonState = new ButtonAction[Sinput.gamepads.Length+1];
 				}
 
-				for (int i=1; i<=Sinput.GetGamepads().Length; i++){
+				for (int i=1; i<=Sinput.gamepads.Length; i++){
 					axisButtonState[i]=ButtonAction.NOTHING;
 				}
 			}

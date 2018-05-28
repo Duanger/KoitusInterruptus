@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using SinputSystems;
 
 public class SinputEditorMenus {
 	
@@ -161,8 +162,11 @@ public class SinputEditorMenus {
 		}
 
 		//couldn't find control scheme, creating a new one
-		Debug.LogError("Control scheme: \"MainControlScheme\" not found, attempting to create one.");
-		SinputSystems.ControlScheme controlScheme = (SinputSystems.ControlScheme)ScriptableObject.CreateInstance(typeof(SinputSystems.ControlScheme));
+		Debug.Log("Control scheme named \"MainControlScheme\" not found, so creating a new one with default controls.");
+		ControlScheme controlScheme = (ControlScheme)ScriptableObject.CreateInstance(typeof(ControlScheme));
+
+		
+
 		AssetDatabase.CreateAsset(controlScheme, "Assets/SInput/Resources/MainControlScheme.asset");
 
 		//now select the new control scheme
@@ -172,4 +176,6 @@ public class SinputEditorMenus {
 			return;
 		}
 	}
+
+	
 }

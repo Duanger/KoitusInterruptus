@@ -28,31 +28,23 @@ public static class Sinput {
 
 
 	//the control scheme, set it with SetControlScheme()
-	private static Control[] controls;
-	public static void SetControls(Control[] newControls){
-		Init();
-		controls = newControls;
-	}
-	public static Control[] GetControls(){
-		Init();
-		return controls;
+	private static Control[] _controls;
+	public static Control[] controls {
+		get { Init(); return _controls; }
+		//set { Init(); _controls = value; }
 	}
 
 	private static SmartControl[] smartControls;
 
-	//gamepads list is checked every GetButton/GetAxis call, when it updates all common binding inputs are reapplied appropriately
-	static bool refreshGamepadsNow = true;
+	//gamepads list is checked every GetButton/GetAxis call, when it updates all common mapped inputs are reapplied appropriately
 	static int nextGamepadCheck=-99;
-	static string[] gamepads = new string[0];
-	public static string[] GetGamepads(){
-		CheckGamepads();
-		return gamepads;
-	}
+	private static string[] _gamepads = new string[0];
+	public static string[] gamepads { get { CheckGamepads(); return _gamepads; } }
 
 	//init
-	private static bool loadCustomControls = true;
 	private static bool initialised = false;
 	static void Init(){
+		//Debug.Log("init!");
 		if (initialised) return;
 		initialised = true;
 
@@ -60,14 +52,13 @@ public static class Sinput {
 
 		zeroInputWaits = new float[_totalPossibleDeviceSlots];
 		zeroInputs = new bool[_totalPossibleDeviceSlots];
-
-		LoadControlScheme("MainControlScheme", loadCustomControls);
-
 	}
 
-	public static ControlScheme controlScheme;
-	public static void LoadControlScheme(string schemeName, bool loadCustom){
-		loadCustomControls = loadCustom;
+	//public static ControlScheme controlScheme;
+	private static bool schemeLoaded = false;
+	public static void LoadControlScheme(string schemeName, bool loadCustomControls) {
+		schemeLoaded = false;
+		//Debug.Log("load scheme name!");
 		Init();
 		UnityEngine.Object[] projectControlSchemes = Resources.LoadAll("", typeof(ControlScheme));
 
@@ -79,17 +70,22 @@ public static class Sinput {
 			Debug.LogError("Couldn't find control scheme \"" + schemeName + "\" in project resources.");
 			return;
 		}
-		controlScheme = (ControlScheme)projectControlSchemes[schemeIndex];
-		LoadControlScheme(controlScheme, loadCustomControls);
+		//controlScheme = (ControlScheme)projectControlSchemes[schemeIndex];
+		LoadControlScheme((ControlScheme)projectControlSchemes[schemeIndex], loadCustomControls);
 	}
-	public static void LoadControlScheme(ControlScheme scheme, bool loadCustom){
-		loadCustomControls = loadCustom;
-		if (!initialised){
-			Init();
-			return;
-		}
+	public static void LoadControlScheme(ControlScheme scheme, bool loadCustomControls) {
+		//Debug.Log("load scheme asset!");
 
-		//Debug.Log("Loading ControlScheme  - loadcustom set to: " + loadCustom.ToString());
+		schemeLoaded = false;
+
+
+		Init();
+
+		//make sure we know what gamepads are connected
+		//and load their common mappings if they are needed
+		CheckGamepads(true);
+
+		//Generate controls from controlScheme asset
 		List<Control> loadedControls = new List<Control>();
 		for (int i=0; i<scheme.controls.Count; i++){
 			Control newControl = new Control(scheme.controls[i].name);
@@ -109,8 +105,9 @@ public static class Sinput {
 
 			loadedControls.Add(newControl);
 		}
-		controls = loadedControls.ToArray();
+		_controls = loadedControls.ToArray();
 
+		//Generate smartControls from controlScheme asset
 		List<SmartControl> loadedSmartControls = new List<SmartControl>();
 		for (int i=0; i<scheme.smartControls.Count; i++){
 			SmartControl newControl = new SmartControl(scheme.smartControls[i].name);
@@ -125,7 +122,10 @@ public static class Sinput {
 
 			newControl.inversion = new bool[_totalPossibleDeviceSlots];
 			newControl.scales = new float[_totalPossibleDeviceSlots];
-			for (int k = 0; k <_totalPossibleDeviceSlots; k++) newControl.scales[k] = scheme.smartControls[i].scale;
+			for (int k = 0; k < _totalPossibleDeviceSlots; k++) {
+				newControl.inversion[k] = scheme.smartControls[i].invert;
+				newControl.scales[k] = scheme.smartControls[i].scale;
+			}
 
 			loadedSmartControls.Add(newControl);
 		}
@@ -133,16 +133,15 @@ public static class Sinput {
 		for (int i=0; i<smartControls.Length; i++) smartControls[i].Init();
 
 		//now load any saved control scheme with custom rebound inputs
-		if (loadCustom && SinputFileIO.SaveDataExists()){
+		if (loadCustomControls && SinputFileIO.SaveDataExists()){
 			//Debug.Log("Found saved binding!");
-			controls = SinputFileIO.LoadControls( controls );
-
-			//also load any common gamepad bindings that might not be part of the saved binding
-			refreshGamepadsNow = true;
-			lastCheckedGamepadRefreshFrame=-1;//if we're doing stuff with control schemes, might want to do this more than once in a frame
-			CheckGamepads();
-			lastCheckedGamepadRefreshFrame=-1;//if we're doing stuff with control schemes, might want to do this more than once in a frame
+			_controls = SinputFileIO.LoadControls( _controls );
 		}
+
+		//make sure controls have any gamepad-relevant stuff set correctly
+		RefreshGamepadControls();
+
+		schemeLoaded = true;
 	}
 
 	static int lastUpdateFrame = -99;
@@ -159,13 +158,15 @@ public static class Sinput {
 		//make sure everything is set up
 		Init();
 
+		if (!schemeLoaded) LoadControlScheme("MainControlScheme", true);
+
 		//check if connected gamepads have changed
 		CheckGamepads();
 
 		//update controls
-		if (null != controls) {
-			for (int i = 0; i < controls.Length; i++) {
-				controls[i].Update(resetAxisButtonStates);
+		if (null != _controls) {
+			for (int i = 0; i < _controls.Length; i++) {
+				_controls[i].Update(resetAxisButtonStates);
 			}
 		}
 
@@ -216,75 +217,61 @@ public static class Sinput {
 
 	//update gamepads
 	static int lastCheckedGamepadRefreshFrame = -99;
-	public static void CheckGamepads(){
-		if (Time.frameCount == lastCheckedGamepadRefreshFrame) return;
+	public static void CheckGamepads(bool refreshGamepadsNow = false){
+		if (Time.frameCount == lastCheckedGamepadRefreshFrame && !refreshGamepadsNow) return;
 		lastCheckedGamepadRefreshFrame = Time.frameCount;
+
+		//Debug.Log("checking gamepads");
 
 		Init();
 
 		string[] inputGamepads = Input.GetJoystickNames();
-		if (gamepads.Length!=inputGamepads.Length) refreshGamepadsNow = true; //number of connected gamepads has changed
+		if (_gamepads.Length!=inputGamepads.Length) refreshGamepadsNow = true; //number of connected gamepads has changed
 		if (!refreshGamepadsNow && nextGamepadCheck < Time.frameCount){
 			//this check is for the rare case gamepads get re-ordered in a single frame & the length of GetJoystickNames() stays the same
 			nextGamepadCheck = Time.frameCount + 500;
-			for (int i=0; i<gamepads.Length; i++){
-				if (gamepads[i] != inputGamepads[i].ToUpper()) refreshGamepadsNow = true;
+			for (int i=0; i<_gamepads.Length; i++){
+				if (_gamepads[i] != inputGamepads[i].ToUpper()) refreshGamepadsNow = true;
 			}
 		}
 		if (refreshGamepadsNow){
 			//Debug.Log("Refreshing gamepads");
 
-			//connected gamepads have changed
-			gamepads = new string[inputGamepads.Length];
-			for (int i=0; i<gamepads.Length; i++){
-				gamepads[i] = inputGamepads[i].ToUpper();
+			//connected gamepads have changed, lets update them
+			_gamepads = new string[inputGamepads.Length];
+			for (int i=0; i<_gamepads.Length; i++){
+				_gamepads[i] = inputGamepads[i].ToUpper();
 			}
 
-			//reload common binding information
-			CommonGamepadBindings.ReloadCommonMaps();
-			refreshGamepadsNow = false;
-
-			if (null != controls){
-				
-
-				//reapply common bindings
-				for (int i=0; i<controls.Length; i++){
-					controls[i].ReapplyCommonBindings();
-				}
-				//reset axis button states
-				for (int i=0; i<controls.Length; i++){
-					controls[i].ResetAxisButtonStates();
-				}
-					
-				//if the input has a listed device name (i.e. it's custom bound, not common bound) it needs its applicable slots setting
-				for (int c=0; c<controls.Length; c++){
-					for (int i=0; i<controls[c].inputs.Count; i++){
-						if (controls[c].inputs[i].isCustom){
-							if (controls[c].inputs[i].inputType == InputDeviceType.GamepadAxis || controls[c].inputs[i].inputType == InputDeviceType.GamepadButton){
-								//Debug.Log("Finding slot for gamepad: " + controls[c].inputs[i].displayName + " of " + controls[c].inputs[i].deviceName);
-								//find applicable gamepad slots for this device
-								List<int> allowedSlots = new List<int>();
-								for (int g=0; g<gamepads.Length; g++){
-									if (gamepads[g].ToUpper() == controls[c].inputs[i].deviceName.ToUpper()){
-										allowedSlots.Add(g);
-									}
-								}
-								controls[c].inputs[i].allowedSlots = allowedSlots.ToArray();
-							}
-						}
-					}
-				}
-			}
-			if (null != smartControls){
-				for (int i=0; i<smartControls.Length; i++){
-					smartControls[i].Init();
-				}
-			}
+			//reload common mapping information for any new gamepads
+			CommonGamepadMappings.ReloadCommonMaps();
 			
+			//refresh control information relating to gamepads
+			if (schemeLoaded) RefreshGamepadControls();
+
+			refreshGamepadsNow = false;
 		}
 	}
 
+	private static void RefreshGamepadControls() {
+		//if (null != _controls) {
+			for (int i = 0; i < _controls.Length; i++) {
+				//reapply common bindings
+				_controls[i].ReapplyCommonBindings();
 
+				//reset axis button states
+				_controls[i].ResetAxisButtonStates();
+
+				//make sure inputs are linked to correct gamepad slots
+				_controls[i].SetAllowedInputSlots();
+			}
+		//}
+		//if (null != smartControls) {
+			for (int i = 0; i < smartControls.Length; i++) {
+				smartControls[i].Init();
+			}
+		//}
+	}
 	
 	
 	
@@ -313,12 +300,15 @@ public static class Sinput {
 		if (GetButtonDown(controlName, InputDeviceSlot.gamepad9)) return InputDeviceSlot.gamepad9;
 		if (GetButtonDown(controlName, InputDeviceSlot.gamepad10)) return InputDeviceSlot.gamepad10;
 		if (GetButtonDown(controlName, InputDeviceSlot.gamepad11)) return InputDeviceSlot.gamepad11;
+		
+		if (GetButtonDown(controlName, InputDeviceSlot.virtual1)) return InputDeviceSlot.virtual1;
 
 		return InputDeviceSlot.any;
 	}
 
 
 	//Button control checks
+	private static bool controlFound = false;//used in control checks to tell whether a control was found or not
 	public static bool GetButton(string controlName){ return ButtonCheck(controlName, InputDeviceSlot.any, ButtonAction.HELD); }
 	public static bool GetButton(string controlName, InputDeviceSlot slot){ return ButtonCheck(controlName, slot, ButtonAction.HELD); }
 
@@ -345,12 +335,12 @@ public static class Sinput {
 		SinputUpdate();
 		if (zeroInputs[(int)slot]) return false;
 
-		bool controlFound = false;
+		controlFound = false;
 
-		for (int i=0; i<controls.Length; i++){
-			if (controls[i].name == controlName){
+		for (int i=0; i<_controls.Length; i++){
+			if (_controls[i].name == controlName){
 				controlFound=true;
-				if (controls[i].GetButtonState(bAction, slot, getRawValue)) return true;
+				if (_controls[i].GetButtonState(bAction, slot, getRawValue)) return true;
 			}
 		}
 
@@ -379,15 +369,15 @@ public static class Sinput {
 		SinputUpdate();
 		if (zeroInputs[(int)slot]) return 0f;
 
-		bool controlFound = false;
+		controlFound = false;
 
 		if (controlName=="") return 0f;
 
 		float returnV = 0f;
-		for (int i=0; i<controls.Length; i++){
-			if (controls[i].name == controlName){
+		for (int i=0; i<_controls.Length; i++){
+			if (_controls[i].name == controlName){
 				controlFound=true;
-				float v = controls[i].GetAxisState(slot);
+				float v = _controls[i].GetAxisState(slot);
 				if (Mathf.Abs(v) > returnV) returnV = v;
 			}
 		}
@@ -455,14 +445,17 @@ public static class Sinput {
 
 		bool preferDelta = true;
 
+		controlFound = false;
+
 		if (controlName == "") return false;
 		float axisVal = 0f;
-		for (int i = 0; i < controls.Length; i++) {
-			if (controls[i].name == controlName) {
-				float v = controls[i].GetAxisState(slot);
+		for (int i = 0; i < _controls.Length; i++) {
+			if (_controls[i].name == controlName) {
+				controlFound = true;
+				float v = _controls[i].GetAxisState(slot);
 				if (Mathf.Abs(v) > axisVal) {
 					axisVal = v;
-					preferDelta = controls[i].GetAxisStateDeltaPreference(slot);
+					preferDelta = _controls[i].GetAxisStateDeltaPreference(slot);
 				}
 			}
 		}
@@ -470,6 +463,7 @@ public static class Sinput {
 		//TODO NOW CHECK SMART CONTROLS FOR FRAMERATE INDEPENDENCE
 		for (int i = 0; i < smartControls.Length; i++) {
 			if (smartControls[i].name == controlName) {
+				controlFound = true;
 				float v = smartControls[i].GetValue(slot, true);
 				if (Mathf.Abs(v) > axisVal) {
 					axisVal = v;
@@ -479,34 +473,42 @@ public static class Sinput {
 			}
 		}
 
+		if (!controlFound) Debug.LogError("Sinput Error: Control \"" + controlName + "\" not found in list of Controls or SmartControls.");
+
 		return preferDelta;
 	}
 
 	//sets whether a control treats GetButton() calls with press or with toggle behaviour
 	public static void SetToggle(string controlName, bool toggle) {
 		SinputUpdate();
-		for (int i = 0; i < controls.Length; i++) {
-			if (controls[i].name == controlName) {
-				controls[i].isToggle = toggle;
+		controlFound = false;
+		for (int i = 0; i < _controls.Length; i++) {
+			if (_controls[i].name == controlName) {
+				controlFound = true;
+				_controls[i].isToggle = toggle;
 			}
 		}
+		if (!controlFound) Debug.LogError("Sinput Error: Control \"" + controlName + "\" not found in list of Controls or SmartControls.");
 	}
 	//returns true if a control treats GetButton() calls with toggle behaviour
 	public static bool GetToggle(string controlName) {
 		SinputUpdate();
-		for (int i = 0; i < controls.Length; i++) {
-			if (controls[i].name == controlName) {
-				return controls[i].isToggle;
+		for (int i = 0; i < _controls.Length; i++) {
+			if (_controls[i].name == controlName) {
+				return _controls[i].isToggle;
 			}
 		}
+		Debug.LogError("Sinput Error: Control \"" + controlName + "\" not found in list of Controls or SmartControls.");
 		return false;
 	}
 
 	//set a smart control to be inverted or not
 	public static void SetInverted(string smartControlName, bool invert, InputDeviceSlot slot=InputDeviceSlot.any) {
 		SinputUpdate();
+		controlFound = false;
 		for (int i = 0; i < smartControls.Length; i++) {
 			if (smartControls[i].name == smartControlName) {
+				controlFound = true;
 				if (slot == InputDeviceSlot.any) {
 					for (int k=0; k<_totalPossibleDeviceSlots; k++) {
 						smartControls[i].inversion[k] = invert;
@@ -516,6 +518,7 @@ public static class Sinput {
 				}
 			}
 		}
+		if (!controlFound) Debug.LogError("Sinput Error: Smart Control \"" + smartControlName + "\" not found in list of SmartControls.");
 	}
 	//returns true if a smart control is inverted
 	public static bool GetInverted(string smartControlName, InputDeviceSlot slot = InputDeviceSlot.any) {
@@ -525,14 +528,17 @@ public static class Sinput {
 				return smartControls[i].inversion[(int)slot];
 			}
 		}
+		Debug.LogError("Sinput Error: Smart Control \"" + smartControlName + "\" not found in list of SmartControls.");
 		return false;
 	}
 
 	//sets scale ("sensitivity") of a smart control
 	public static void SetScale(string smartControlName, float scale, InputDeviceSlot slot = InputDeviceSlot.any) {
 		SinputUpdate();
+		controlFound = false;
 		for (int i = 0; i < smartControls.Length; i++) {
 			if (smartControls[i].name == smartControlName) {
+				controlFound = true;
 				if (slot == InputDeviceSlot.any) {
 					for (int k = 0; k < _totalPossibleDeviceSlots; k++) {
 						smartControls[i].scales[k] = scale;
@@ -542,6 +548,7 @@ public static class Sinput {
 				}
 			}
 		}
+		if (!controlFound) Debug.LogError("Sinput Error: Smart Control \"" + smartControlName + "\" not found in list of SmartControls.");
 	}
 
 	//gets scale of a smart control
@@ -551,6 +558,7 @@ public static class Sinput {
 				return smartControls[i].scales[(int)slot];
 			}
 		}
+		Debug.LogError("Sinput Error: Smart Control \"" + smartControlName + "\" not found in list of SmartControls.");
 		return 1f;
 	}
 

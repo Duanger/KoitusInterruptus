@@ -5,8 +5,8 @@ using UnityEditor;
 using System;
 using SinputSystems;
 
-[CustomEditor(typeof(CommonBinding))]
-public class CommonBindingEditor : Editor {
+[CustomEditor(typeof(CommonMapping))]
+public class CommonMappingEditor : Editor {
 
 	int currentPanel = 0;
 
@@ -14,7 +14,7 @@ public class CommonBindingEditor : Editor {
 
 	public override void OnInspectorGUI(){
 		
-		CommonBinding padBinding = (CommonBinding)target;
+		CommonMapping padMapping = (CommonMapping)target;
 		EditorGUI.BeginChangeCheck();
 
 		string[] strs = new string[]{"Gamepad","Buttons","Axis"};
@@ -22,13 +22,10 @@ public class CommonBindingEditor : Editor {
 		EditorGUILayout.Space();
 		EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 
-		/*if (GUILayout.Button("clearmatchingslots ~ " +padBinding.matchingGamepadSlots.Count.ToString())){
-			padBinding.matchingGamepadSlots = new List<int>();
-		}*/
 
 		if (currentPanel==0){
 			//Gamepad general menu
-			padBinding.os = (OSFamily)EditorGUILayout.EnumPopup("Operating System:", padBinding.os);
+			padMapping.os = (OSFamily)EditorGUILayout.EnumPopup("Operating System:", padMapping.os);
 			EditorGUILayout.Space();
 			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 
@@ -37,18 +34,18 @@ public class CommonBindingEditor : Editor {
 			EditorGUILayout.LabelField("(Case insensitive, but needs to match what unity detects)");
 
 
-			for (int i=0; i<padBinding.names.Count; i++){
+			for (int i=0; i<padMapping.names.Count; i++){
 				EditorGUILayout.BeginHorizontal();
-				padBinding.names[i] = EditorGUILayout.TextField(padBinding.names[i]);
+				padMapping.names[i] = EditorGUILayout.TextField(padMapping.names[i]);
 				if (GUILayout.Button("x")){
 					//remove gamepad name
-					padBinding.names.RemoveAt(i);
+					padMapping.names.RemoveAt(i);
 				}
 				EditorGUILayout.EndHorizontal();
 			}
 			if (GUILayout.Button("+")){
 				//add gamepad name here
-				padBinding.names.Add("GAMEPAD_NAME_HERE");
+				padMapping.names.Add("GAMEPAD_NAME_HERE");
 			}
 			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 
@@ -58,87 +55,87 @@ public class CommonBindingEditor : Editor {
 			EditorGUILayout.LabelField("check if it contains any of the following.");
 
 
-			for (int i = 0; i < padBinding.partialNames.Count; i++) {
+			for (int i = 0; i < padMapping.partialNames.Count; i++) {
 				EditorGUILayout.BeginHorizontal();
-				padBinding.partialNames[i] = EditorGUILayout.TextField(padBinding.partialNames[i]);
+				padMapping.partialNames[i] = EditorGUILayout.TextField(padMapping.partialNames[i]);
 				if (GUILayout.Button("x")) {
 					//remove gamepad name
-					padBinding.partialNames.RemoveAt(i);
+					padMapping.partialNames.RemoveAt(i);
 				}
 				EditorGUILayout.EndHorizontal();
 			}
 			if (GUILayout.Button("+")) {
 				//add gamepad name here
-				padBinding.partialNames.Add("PARTIAL_NAME_HERE");
+				padMapping.partialNames.Add("PARTIAL_NAME_HERE");
 			}
 			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 
 			EditorGUILayout.Space();
 			EditorGUILayout.PrefixLabel("Default pad:");
 			EditorGUILayout.LabelField("If a common or saved binding isn't found,");
-			EditorGUILayout.LabelField("is this the default binding that will be loaded?");
-			bool wasDefault = padBinding.isDefault;
-			padBinding.isDefault = EditorGUILayout.Toggle("Is Default", padBinding.isDefault);
-			if (padBinding.isDefault && !wasDefault) {
-				//just set this binding to defqault, lets unset any other common bindings of the same OS from being default
-				System.Object[] commonBindingAssets = Resources.LoadAll("", typeof(CommonBinding));
-				for (int i = 0; i < commonBindingAssets.Length; i++) {
-					if (((CommonBinding)commonBindingAssets[i]).os == padBinding.os) {
-						((CommonBinding)commonBindingAssets[i]).isDefault = false;
-						EditorUtility.SetDirty((CommonBinding)commonBindingAssets[i]);
+			EditorGUILayout.LabelField("is this the default mapping that will be loaded?");
+			bool wasDefault = padMapping.isDefault;
+			padMapping.isDefault = EditorGUILayout.Toggle("Is Default", padMapping.isDefault);
+			if (padMapping.isDefault && !wasDefault) {
+				//we set this mapping to default, lets unset any other common mappings of the same OS from being default
+				System.Object[] commonMappingAssets = Resources.LoadAll("", typeof(CommonMapping));
+				for (int i = 0; i < commonMappingAssets.Length; i++) {
+					if (((CommonMapping)commonMappingAssets[i]).os == padMapping.os) {
+						((CommonMapping)commonMappingAssets[i]).isDefault = false;
+						EditorUtility.SetDirty((CommonMapping)commonMappingAssets[i]);
 					}
 				}
-				padBinding.isDefault = true;
+				padMapping.isDefault = true;
 			}
 		}
 
 		if (currentPanel==1){
-			//button binding menu
-			if (padBinding.buttons.Count>0){
+			//button mapping menu
+			if (padMapping.buttons.Count>0){
 				//EditorGUILayout.BeginHorizontal();
 				EditorGUILayout.LabelField("Button Type / Button ID / Display Name");
 				//EditorGUILayout.EndHorizontal();
 			}
 
-			CommonBinding.GamepadButtonInput activeButton = new CommonBinding.GamepadButtonInput();
-			for (int i=0; i<padBinding.buttons.Count; i++){
+			CommonMapping.GamepadButtonInput activeButton = new CommonMapping.GamepadButtonInput();
+			for (int i=0; i<padMapping.buttons.Count; i++){
 				EditorGUILayout.BeginHorizontal();
-				activeButton = padBinding.buttons[i];
-				activeButton.buttonType = (CommonGamepadInputs)EditorGUILayout.EnumPopup(padBinding.buttons[i].buttonType);
-				activeButton.buttonNumber = EditorGUILayout.IntField( padBinding.buttons[i].buttonNumber);
+				activeButton = padMapping.buttons[i];
+				activeButton.buttonType = (CommonGamepadInputs)EditorGUILayout.EnumPopup(padMapping.buttons[i].buttonType);
+				activeButton.buttonNumber = EditorGUILayout.IntField( padMapping.buttons[i].buttonNumber);
 				activeButton.displayName = EditorGUILayout.TextField( activeButton.displayName);
-				padBinding.buttons[i] = activeButton;
+				padMapping.buttons[i] = activeButton;
 				if (GUILayout.Button("x")){
 					//remove button
-					padBinding.buttons.RemoveAt(i);
+					padMapping.buttons.RemoveAt(i);
 				}
 				EditorGUILayout.EndHorizontal();
 			}
 			if (GUILayout.Button("+")){
-				//add button binding name here
-				CommonBinding.GamepadButtonInput newButtonInput = new CommonBinding.GamepadButtonInput();
+				//add button mapping name here
+				CommonMapping.GamepadButtonInput newButtonInput = new CommonMapping.GamepadButtonInput();
 				newButtonInput.buttonType = CommonGamepadInputs.NOBUTTON;
 				newButtonInput.displayName = "[?]";
 				newButtonInput.buttonNumber = 0;
-				padBinding.buttons.Add(newButtonInput);
+				padMapping.buttons.Add(newButtonInput);
 			}
 
 		}
 
 		if (currentPanel==2){
-			//axis binding menu
-			if (axisEditFoldouts.Count != padBinding.axis.Count){
+			//axis mapping menu
+			if (axisEditFoldouts.Count != padMapping.axis.Count){
 				axisEditFoldouts = new List<bool>();
-				for (int i=0; i<padBinding.axis.Count; i++) axisEditFoldouts.Add(false);
+				for (int i=0; i<padMapping.axis.Count; i++) axisEditFoldouts.Add(false);
 			}
 
-			CommonBinding.GamepadAxisInput activeAxis = new CommonBinding.GamepadAxisInput();
+			CommonMapping.GamepadAxisInput activeAxis = new CommonMapping.GamepadAxisInput();
 			bool delete = false;
-			for (int i=0; i<padBinding.axis.Count; i++){
-				axisEditFoldouts[i] = EditorGUILayout.Foldout(axisEditFoldouts[i],padBinding.axis[i].buttonType.ToString());
+			for (int i=0; i<padMapping.axis.Count; i++){
+				axisEditFoldouts[i] = EditorGUILayout.Foldout(axisEditFoldouts[i],padMapping.axis[i].buttonType.ToString());
 				if (axisEditFoldouts[i]){
 					delete = false;
-					activeAxis = padBinding.axis[i];
+					activeAxis = padMapping.axis[i];
 					EditorGUILayout.BeginHorizontal();
 					activeAxis.buttonType = (CommonGamepadInputs)EditorGUILayout.EnumPopup(activeAxis.buttonType);
 					if (GUILayout.Button("x")) delete = true;
@@ -173,11 +170,11 @@ public class CommonBindingEditor : Editor {
 
 					EditorGUILayout.EndHorizontal();
 
-					padBinding.axis[i] = activeAxis;
+					padMapping.axis[i] = activeAxis;
 
 					if (delete){
 						//remove axis
-						padBinding.axis.RemoveAt(i);
+						padMapping.axis.RemoveAt(i);
 						axisEditFoldouts.RemoveAt(i);
 						i--;
 					}
@@ -188,8 +185,8 @@ public class CommonBindingEditor : Editor {
 			}
 			EditorGUILayout.Space();
 			if (GUILayout.Button("+")){
-				//add button binding name here
-				CommonBinding.GamepadAxisInput newAxisInput = new CommonBinding.GamepadAxisInput();
+				//add axis mapping name here
+				CommonMapping.GamepadAxisInput newAxisInput = new CommonMapping.GamepadAxisInput();
 				newAxisInput.buttonType = CommonGamepadInputs.NOBUTTON;
 
 				newAxisInput.axisNumber = 1;
@@ -209,7 +206,7 @@ public class CommonBindingEditor : Editor {
 
 				newAxisInput.displayName = "[?]";
 
-				padBinding.axis.Add(newAxisInput);
+				padMapping.axis.Add(newAxisInput);
 				axisEditFoldouts.Add(true);
 			}
 
@@ -218,7 +215,7 @@ public class CommonBindingEditor : Editor {
 
 		if (EditorGUI.EndChangeCheck()){
 			//something was changed
-			EditorUtility.SetDirty(padBinding);
+			EditorUtility.SetDirty(padMapping);
 		}
 
 	}
