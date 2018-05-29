@@ -18,23 +18,40 @@ public class LineController : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate ()
 	{
-		if (Vector2.Distance(_fishColl.transform.position, _fishColl2.transform.position) < _SnapDist)
+		float currentDistance = Vector2.Distance(_fishColl.transform.position, _fishColl2.transform.position);
+		foreach (var b in Points)
 		{
-			for (int i = 0; i < Points.Length; i++)
+			if (currentDistance < _SnapDist)
 			{
-				_line.SetPosition(i,Points[i].position);
-			}
-
-		}
-		
-		if (Vector2.Distance(_fishColl.transform.position, _fishColl2.transform.position) > _SnapDist)
-		{
-			_line.positionCount = 6;
-			for (int i = 0; i < 11; i++)
-			{
-				_line.SetPosition(i,Points[i].position);
-			}
 			
-		}
+				_line.SetPosition(System.Array.IndexOf(Points,b),b.position);
+			
+			}
+			else 
+			{
+			
+				if (b == Points[0])
+				{
+					b.gameObject.GetComponent<SpringJoint2D>().enabled = false;
+					b.gameObject.GetComponent<CapsuleCollider2D>().enabled = true;
+				}
+
+				if (b == Points[13])
+				{
+					b.gameObject.GetComponent<SpringJoint2D>().enabled = true;
+					b.gameObject.GetComponent<CapsuleCollider2D>().enabled = true;
+					b.gameObject.GetComponent<SpringJoint2D>().connectedBody = Points[0];
+					b.gameObject.GetComponent<SpringJoint2D>().autoConfigureDistance = false;
+					b.gameObject.GetComponent<SpringJoint2D>().distance = 5;
+				}
+				else if(b != Points[0] || b!= Points[13])
+				{
+					b.gameObject.GetComponent<SpringJoint2D>().enabled = false;
+					b.gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
+				}
+			
+				_line.positionCount = 0;
+			}
+		}	
 	}
 }
