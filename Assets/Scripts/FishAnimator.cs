@@ -45,7 +45,7 @@ public class FishAnimator : MonoBehaviour
 			_enumIndex = 2;
 		}
 
-		if (UnbreakableManager.OrangeFeesh == UnbreakableManager.OrangeFishChosen.OrangeGroomChosen && GetComponent<SinputPlayerController>().PlayerNumber == 1)
+		if (fishType == FishType.orangeGroom/*|| UnbreakableManager.OrangeFeesh == UnbreakableManager.OrangeFishChosen.OrangeGroomChosen && GetComponent<SinputPlayerController>().PlayerNumber == 1*/)
 		{
 			_enumIndex = 3;
 			Debug.Log(UnbreakableManager.OrangeFeesh);
@@ -65,12 +65,13 @@ public class FishAnimator : MonoBehaviour
 
 	void AnimController(int i,String fish)
 	{
+		Debug.Log(fish);
 		_fishController.runtimeAnimatorController = _fishAnimController[i];
 			if (_rigidbody.velocity.x < 0)
 			{
 				if (!_facingLeft && !_facingRight)
 				{
-					_fishController.Play(_fishTypeString);
+					_fishController.Play(fish);
 				}
 				_facingLeft = true;
 				if (_facingLeft && _facingRight)
