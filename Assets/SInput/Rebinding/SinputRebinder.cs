@@ -28,12 +28,46 @@ namespace SinputSystems.Rebinding{
 
 		void Init () {
 			//Debug.Log("Loading Default controls");
-			Sinput.LoadControlScheme("MainControlScheme", false);
+			/*Sinput.LoadControlScheme("MainControlScheme", false);
 			controlsDefaults = Sinput.controls;
 			
 			//Debug.Log("loading controls with saved data");
 			Sinput.LoadControlScheme("MainControlScheme", true);
-			controls = Sinput.controls;
+			controls = Sinput.controls;*/
+
+
+			Sinput.LoadControlScheme("MainControlScheme", false);
+			Control[] sinputControls = Sinput.controls;
+			controlsDefaults = new Control[sinputControls.Length];
+			for (int i = 0; i < sinputControls.Length; i++) {
+				controlsDefaults[i] = new Control(sinputControls[i].name);
+				for (int k = 0; k < sinputControls[i].commonMappings.Count; k++) {
+					controlsDefaults[i].commonMappings.Add(sinputControls[i].commonMappings[k]);
+				}
+
+				controlsDefaults[i].inputs = new List<DeviceInput>();
+				for (int k = 0; k < sinputControls[i].inputs.Count; k++) {
+					controlsDefaults[i].inputs.Add(sinputControls[i].inputs[k]);
+				}
+			}
+
+			//Debug.Log("loading controls with saved data");
+			Sinput.LoadControlScheme("MainControlScheme", true);
+			sinputControls = Sinput.controls;
+			controls = new Control[sinputControls.Length];
+			for (int i = 0; i < sinputControls.Length; i++) {
+				controls[i] = new Control(sinputControls[i].name);
+				for (int k = 0; k < sinputControls[i].commonMappings.Count; k++) {
+					controls[i].commonMappings.Add(sinputControls[i].commonMappings[k]);
+				}
+
+				controls[i].inputs = new List<DeviceInput>();
+				for (int k = 0; k < sinputControls[i].inputs.Count; k++) {
+					controls[i].inputs.Add(sinputControls[i].inputs[k]);
+				}
+			}
+
+
 
 			recordedPads = Sinput.gamepads;
 
@@ -363,7 +397,7 @@ namespace SinputSystems.Rebinding{
 					if (devicePanels[d].deviceName == pads[p]) deviceAlreadyListed = true;
 				}
 
-				if (!deviceAlreadyListed) AddDevicePanel(InputDeviceType.GamepadAxis, pads[p], p);
+				if (!deviceAlreadyListed && pads[p]!="") AddDevicePanel(InputDeviceType.GamepadAxis, pads[p], p);
 			}
 			
 		}

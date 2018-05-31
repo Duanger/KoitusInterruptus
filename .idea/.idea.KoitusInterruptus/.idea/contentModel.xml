@@ -7,14 +7,11 @@
       <e p="Assets" t="Include">
         <e p="Scripts" t="Include">
           <e p="CameraFollow.cs" t="Include" />
-          <e p="ChooseFishMenuHandler.cs" t="Include" />
           <e p="ConnectOurBodies.cs" t="Include" />
           <e p="FishAnimator.cs" t="Include" />
           <e p="LineController.cs" t="Include" />
-          <e p="MenuUiInputHandler.cs" t="Include" />
           <e p="SelectableUIGrid.cs" t="Include" />
           <e p="SinputPlayerController.cs" t="Include" />
-          <e p="StartMenuUiInput.cs" t="Include" />
           <e p="UIButton.cs" t="Include" />
           <e p="UnbreakableManager.cs" t="Include" />
         </e>
@@ -24,6 +21,7 @@
             <e p="ControlSchemeEditor.cs" t="Include" />
             <e p="SinputEditorMenus.cs" t="Include" />
             <e p="SinputTouchEditors.cs" t="Include" />
+            <e p="StandaloneSinputModuleEditor.cs" t="Include" />
           </e>
           <e p="Example" t="Include">
             <e p="MultiplayerPlayer.cs" t="Include" />
@@ -45,6 +43,7 @@
             <e p="SinputEnums.cs" t="Include" />
             <e p="SinputFileIO.cs" t="Include" />
             <e p="SmartControl.cs" t="Include" />
+            <e p="StandaloneSinputModule.cs" t="Include" />
             <e p="VirtualInput.cs" t="Include" />
           </e>
           <e p="TouchControls" t="Include">

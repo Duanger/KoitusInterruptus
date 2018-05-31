@@ -132,7 +132,7 @@ public class CommonMappingEditor : Editor {
 			CommonMapping.GamepadAxisInput activeAxis = new CommonMapping.GamepadAxisInput();
 			bool delete = false;
 			for (int i=0; i<padMapping.axis.Count; i++){
-				axisEditFoldouts[i] = EditorGUILayout.Foldout(axisEditFoldouts[i],padMapping.axis[i].buttonType.ToString());
+				axisEditFoldouts[i] = EditorGUILayout.Foldout(axisEditFoldouts[i],padMapping.axis[i].buttonType.ToString(), true);
 				if (axisEditFoldouts[i]){
 					delete = false;
 					activeAxis = padMapping.axis[i];

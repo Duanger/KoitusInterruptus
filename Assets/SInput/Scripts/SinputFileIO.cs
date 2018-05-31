@@ -56,7 +56,27 @@ namespace SinputSystems{
 				}
 			}
 
+			//load control toggle setting
+			for (int c=0; c<controls.Count; c++) {
+				controls[c].isToggle = PlayerPrefs.GetInt("snpttoggle_" + controls[c].name, 0)==1;
+			}
 
+
+			//load smart control settings
+			bool invert = false;
+			float scale = 1f;
+			for (int s = 0; s < Sinput.smartControls.Length; s++) {
+				for (int i = 0; i < Sinput.totalPossibleDeviceSlots; i++) {
+					invert = PlayerPrefs.GetInt("snptinvert_" + Sinput.smartControls[s].name + i.ToString(), 0)==1;
+					Sinput.SetInverted(Sinput.smartControls[s].name, invert, (InputDeviceSlot)i);
+
+					scale = PlayerPrefs.GetFloat("snptscale_" + Sinput.smartControls[s].name + i.ToString(), 1f);
+					Sinput.SetScale(Sinput.smartControls[s].name, scale, (InputDeviceSlot)i);
+				}
+			}
+
+			//load mouse sensitivity
+			Sinput.mouseSensitivity = PlayerPrefs.GetFloat("snptMouseSens", 1f);
 
 
 			return controls.ToArray();
@@ -132,6 +152,11 @@ namespace SinputSystems{
 			string savedInputNames = "";
 			int savedInputIndex = 0;
 			for (int c=0; c<controls.Length; c++){
+				//save whether this control is a toggle
+
+				PlayerPrefs.SetInt("snpttoggle_" + controls[c].name, 0);
+				if(controls[c].isToggle) PlayerPrefs.SetInt("snpttoggle_" + controls[c].name, 1);
+
 				for (int i=0; i<controls[c].inputs.Count; i++){
 
 
@@ -148,8 +173,22 @@ namespace SinputSystems{
 
 				}
 			}
-
 			PlayerPrefs.SetString("Sinput_savedInputsList", savedInputNames);
+
+			//save smart control settings
+			for (int s=0; s<Sinput.smartControls.Length; s++) {
+				for (int i=0; i<Sinput.totalPossibleDeviceSlots; i++) {
+					PlayerPrefs.SetInt("snptinvert_" + Sinput.smartControls[s].name + i.ToString(), 0);
+					if (Sinput.smartControls[s].inversion[i]) PlayerPrefs.SetInt("snptinvert_" + Sinput.smartControls[s].name + i.ToString(), 1);
+
+					PlayerPrefs.SetFloat("snptscale_" + Sinput.smartControls[s].name + i.ToString(), Sinput.smartControls[s].scales[i]);
+				}
+			}
+
+			//save mouse sensitivity
+			PlayerPrefs.SetFloat("snptMouseSens", Sinput.mouseSensitivity);
+
+			
 		}
 
 		static void SaveInput(DeviceInput input, string controlName, string saveName){
@@ -200,9 +239,27 @@ namespace SinputSystems{
 		//deleting stuff
 		public static void DeleteSavedControls(){
 			string[] savedInputsList = PlayerPrefs.GetString("Sinput_savedInputsList","").Split('\n');
+			//delete inputs
 			for (int i=0; i<savedInputsList.Length; i++){
 				DeleteSavedInput(savedInputsList[i]);
 			}
+
+			//delete control settings
+			for (int c=0; c<Sinput.controls.Length; c++) {
+				PlayerPrefs.DeleteKey("snpttoggle_" + Sinput.controls[c].name);
+			}
+
+			//delete smart control settings
+			for (int s = 0; s < Sinput.smartControls.Length; s++) {
+				for (int i = 0; i < Sinput.totalPossibleDeviceSlots; i++) {
+					PlayerPrefs.DeleteKey("snptinvert_" + Sinput.smartControls[s].name + i.ToString());
+					PlayerPrefs.DeleteKey("snptscale_" + Sinput.smartControls[s].name + i.ToString());
+				}
+			}
+
+			//delete mouse sensitivity setting
+			PlayerPrefs.DeleteKey("snptMouseSens");
+
 
 			PlayerPrefs.DeleteKey("Sinput_savedInputsList");
 		}

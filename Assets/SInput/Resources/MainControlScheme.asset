@@ -16,32 +16,27 @@ MonoBehaviour:
     keyboardInputs: 0500000004000000
     gamepadInputs: 0f0000000b000000
     mouseInputs: 
-    virtualInputs:
-    - Touch_LEFT
+    virtualInputs: []
   - name: Right
     keyboardInputs: 0800000003000000
     gamepadInputs: 100000000c000000
     mouseInputs: 
-    virtualInputs:
-    - Touch_RIGHT
+    virtualInputs: []
   - name: Up
     keyboardInputs: 1b00000001000000
     gamepadInputs: 110000000d000000
     mouseInputs: 
-    virtualInputs:
-    - Touch_UP
+    virtualInputs: []
   - name: Down
     keyboardInputs: 1700000002000000
     gamepadInputs: 120000000e000000
     mouseInputs: 
-    virtualInputs:
-    - Touch_DOWN
+    virtualInputs: []
   - name: Jump
     keyboardInputs: 33000000
     gamepadInputs: 01000000
     mouseInputs: 
-    virtualInputs:
-    - Touch_JUMP
+    virtualInputs: []
   - name: Fire1
     keyboardInputs: 22000000
     gamepadInputs: 08000000
@@ -91,8 +86,7 @@ MonoBehaviour:
     keyboardInputs: 30000000
     gamepadInputs: 17000000
     mouseInputs: 
-    virtualInputs:
-    - Touch_JOIN
+    virtualInputs: []
   smartControls:
   - name: Horizontal
     positiveControl: Right

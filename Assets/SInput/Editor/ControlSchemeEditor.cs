@@ -48,7 +48,7 @@ public class ControlSchemeEditor : Editor {
 		//	guiBGStyle = new GUIStyle();
 		//}
 
-		string[] strs = new string[]{"Controls","Smart Controls"};
+		string[] strs = new string[] { "Controls", "Smart Controls" };//,"Settings"};
 		currentPanel = GUILayout.Toolbar(currentPanel, strs);
 		EditorGUILayout.Space();
 		EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
@@ -73,7 +73,7 @@ public class ControlSchemeEditor : Editor {
 				bool moveDown = false;
 
 				EditorGUILayout.BeginHorizontal();
-				controlFoldoutAnims[i].target = EditorGUILayout.Foldout(controlFoldoutAnims[i].target,controlScheme.controls[i].name);
+				controlFoldoutAnims[i].target = EditorGUILayout.Foldout(controlFoldoutAnims[i].target,controlScheme.controls[i].name, true);
 				//EditorGUILayout.BeginHorizontal(GUILayout.Width(90));
 				if (GUILayout.Button("↑", EditorStyles.miniButton, GUILayout.Width(20))) moveUp = true;
 				if (GUILayout.Button("↓", EditorStyles.miniButton, GUILayout.Width(20))) moveDown = true;
@@ -340,7 +340,7 @@ public class ControlSchemeEditor : Editor {
 			ControlScheme.SmartControlSetup activeSmartControl = new ControlScheme.SmartControlSetup();
 			for (int i=0; i<controlScheme.smartControls.Count; i++){
 				EditorGUILayout.BeginHorizontal();
-				smartControlFoldouts[i].target = EditorGUILayout.Foldout(smartControlFoldouts[i].target,controlScheme.smartControls[i].name);
+				smartControlFoldouts[i].target = EditorGUILayout.Foldout(smartControlFoldouts[i].target,controlScheme.smartControls[i].name, true);
 
 				//EditorGUILayout.LabelField("");
 				bool deleteControl = false;
@@ -458,6 +458,13 @@ public class ControlSchemeEditor : Editor {
 				negativeControlIndices.Add(0);
 			}
 		}
+
+		/*if (currentPanel == 2) {
+			//settings panel
+			controlScheme.name = EditorGUILayout.TextField("Control Scheme Name", controlScheme.name);
+			controlScheme.exposeMouseSensitivityOption = EditorGUILayout.Toggle("Expose mouse sensitivity on rebind screen", controlScheme.exposeMouseSensitivityOption);
+			controlScheme.mouseAndKeyboardAreDistinct = EditorGUILayout.Toggle("Mouse & Keyboard are distinct", controlScheme.mouseAndKeyboardAreDistinct);
+		}*/
 
 		if (EditorGUI.EndChangeCheck()){
 			//something was changed

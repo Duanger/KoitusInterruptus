@@ -5,10 +5,15 @@ using UnityEngine;
 namespace SinputSystems{
 	[CreateAssetMenu]
 	public class ControlScheme : ScriptableObject {
-
+		
 		public List<ControlSetup> controls = new List<ControlSetup>();
 		public List<SmartControlSetup> smartControls = new List<SmartControlSetup>();
 
+		//settings
+		//public string name = "";
+		//public bool exposeMouseSensitivityOption = true;
+		//public bool mouseAndKeyboardAreDistinct = false;
+		//public List<string> 
 		
 		public ControlScheme() {
 			//add all the default controls

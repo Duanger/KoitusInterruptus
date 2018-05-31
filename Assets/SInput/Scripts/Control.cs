@@ -133,7 +133,11 @@ namespace SinputSystems{
 				if (bAction == ButtonAction.UP) return controlStates[(int)slot].toggleReleased;
 			} else { 
 				if (bAction == ButtonAction.HELD) return controlStates[(int)slot].held;
-				if (bAction == ButtonAction.DOWN) return controlStates[(int)slot].pressed;
+				if (bAction == ButtonAction.DOWN) {
+					if (null==controlStates) Debug.Log("yup");
+					return controlStates[(int)slot].pressed;
+
+				}
 				if (bAction == ButtonAction.UP) return controlStates[(int)slot].released;
 			}
 			if (bAction == ButtonAction.REPEATING) return controlStates[(int)slot].repeatPressed;

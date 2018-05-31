@@ -1,27 +1,19 @@
 ~~~~~~~~~~ Sophie's Dev Notes: ~~~~~~~~~~
 
+
 priority to-do for future versions:
-TODO: tidy up the whole initialisation process, it's kind of a nightmare and is probably full of redundant stuff
+TODO: properly test mouse-sens/toggles/inversion/scales are saving & loading OK
+TODO: Make better example scenes showing all key features
 TODO: support for multiple control schemes and saved custom control schemes
-TODO: Sinput-version of unity's Standalone Input Module, so sinput inputs can navigate unity UI interactibes
-TODO: be able to bind modifier keys (and gamepad buttons), eg shift+a, LB+dpadLeft ?
+TODO: tidy up the whole initialisation process, it's kind of a nightmare and is probably full of redundant stuff
 TODO: optimisation might be good to do, sometime
-TODO: optimnise axis button states so they are updated when an input is checked at the start of a frame
-TODO: figure out wtf is the deal with the "" gamepad on windows after disconnecting a gamepad
-TODO: make clear video documentation, and SUBTITLE it
+TODO: optimise axis button states so they are updated when an input is checked at the start of a frame
 TODO: virtual slots for virtual inputs
 TODO: get undo/redo to work with inspector changes for control schemes and common mappings
-TODO: add stuff about virtual inputs to docs at some point
-TODO: Make better example scenes showing all key features
-TODO: If a control has an analogue input and a button input of the same name (eg som pads have a triger axis AND trigger button), favour the analogue in GetAxis(), and favour the button in GetButton()
 TODO: make it so touchscreen controls can be repositioned and rescaled
-TODO: other possible touch control prefabs; swipe listener that can act as left/right/up/down buttons, pinch-zoom axis, and any other gestures I can think of
-TODO: make it so foldouts in control scheme editor work by clicking on foldout name and not just the foldout arrow thing
+TODO: other possible touch control prefabs; slider, dpad, swipe listener that can act as left/right/up/down buttons, pinch-zoom axis, and any other gestures I can think of
 
 Saving to-do:
-TODO: save each control's toggle setting
-TODO: save axis inversion & sensitivity settings
-TODO: Save mouse sensitivity, and smartcontrol scales
 TODO: Alt option to player prefs, be able to save/load settings from a single file/string and let devs control specific IO
 
 Rebinding to-do;
@@ -29,10 +21,18 @@ TODO: if keyboard&mouse control are set to distinct, seperate them in the rebind
 TODO: when adding an input, automatically start listening for what its binding should be
 TODO: Find a way to deal with (or at least highlight) inputs that clash in the rebinding menu
 TODO: Get rebind menu elements to have explicit navigation controls because the automatic ones are not exactly perfect
+TODO: Don't rebuild the entire UI every time there's a change (but if you must, make it keep the active element active after it's rebuilt)
+TODO: be able to cancel listening for a rebind
+TODO: be able to bind modifier keys (and gamepad buttons), eg shift+a, LB+dpadLeft ?
+
+Documentation to-do;
+TODO: video documentation with subtitles
+TODO: Virtual input docs
+TODO: touch control docs
 
 
 future feature wishlist/to-do
- - GetDisplayName(controlName, PreferedDeviceType, defaultDisplayName) for user-facing text prompts
+ - GetDisplayName(controlName, defaultDisplayName, slot) for user-facing text prompts (if 'any' slot, use whichever slot last returned a true/non-zero value)
  - GetDisplayIcon() like GetDisplayName() but returns an image for the button/key/whatever
  - Multiple mice/keyboards
  - VR input
@@ -46,9 +46,26 @@ future feature wishlist/to-do
  - common shortcut to bring up rebind menu, loads the rebind scene additively and ignores other sinput calls until the menu is closed
  
 
+ need options to expose (or not) certain stuff on the rebind menu like:
+	- whether to show mouse sensitivity
+	- whether mouse & keyboard are distinct
+	- which controls/smartcontrols
+		- can be toggled
+		- can be inverted
+		- can be rescaled
 
  
  ~~~~~~~~~~ Changelog: ~~~~~~~~~~
+
+ 2018_E (30/05/18)
+   - Sinput editor foldouts toggle when either label or icon is clicked instead of just icon
+   - Controls' toggle settings are now saved/loaded with custom binding
+   - Smart controls' scale and inversion settings are now saved/loaded with custom binding
+   - mouse sensitivity setting is now saved/loaded with custom binding
+   - Increased defualt wait time before GetButtonDownRepeating() starts repeating by an extra quarter second
+   - Added Standalone Sinput Module, to replace Standalone Input Modules and make Sinput button presses effect unity UI events
+   - Reverted to an older version of the Rebinder initialisation funtion to fix a bug (rebinding happened on active control list)
+   - Rebind menu no longer lists reported gamepads with "" (empty string) names. This fixes a bug with disconnected pads but will mean if a pad genuinely has no ID it can't be bound anymore
 
  2018_D (28/05/18)
    - Version names now have an underscore in them to make them easier to read. Big change, I know.
