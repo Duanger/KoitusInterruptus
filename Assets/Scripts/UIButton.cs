@@ -8,11 +8,12 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 
-public class UIButton : MonoBehaviour, ISelectHandler,IDeselectHandler
+public class UIButton : MonoBehaviour
 {
 	public int ButtonIndex;
-	private Animator _anim;
+	[SerializeField]private Animator _anim;
 	[SerializeField] private bool _isFishButton;
+	private GameObject _anyEventSystem, _eventSystem1, _eventSystem2;
 	private bool _testBool;
 	private GameObject _herChoice;
 	[SerializeField] private bool _testTwoControllers;
@@ -24,11 +25,15 @@ public class UIButton : MonoBehaviour, ISelectHandler,IDeselectHandler
 		
 		if (_isFishButton)
 		{
-			_anim = GetComponentInChildren<Animator>();
 			_anim.enabled = false;
 		}
 		if (gameObject.name == "Start")
 		{
+			_anyEventSystem = GameObject.FindGameObjectWithTag("Any");
+			_eventSystem1 = GameObject.FindGameObjectWithTag("Gamepad1");
+			_eventSystem2 = GameObject.FindGameObjectWithTag("Gamepad2");
+			_eventSystem1.SetActive(false);
+			_eventSystem2.SetActive(false);
 			_herChoice = GameObject.FindGameObjectWithTag("ChooseFish");
 			_herChoice.SetActive(false);
 		}
@@ -56,22 +61,24 @@ public class UIButton : MonoBehaviour, ISelectHandler,IDeselectHandler
 
 	public void PressedStart()
 	{
+		_anyEventSystem.SetActive(false);
+		_eventSystem1.SetActive(true);
+		_eventSystem2.SetActive(true);
 		_herChoice.SetActive(true);
 		transform.parent.gameObject.SetActive(false);
 		//UnbreakableManager.Feesh
 	}
 
-	public void OnSelect(BaseEventData eventData)
+	public void Selectedd()
 	{
-		if(_isFishButton)
 		_anim.enabled = true;
 		//_testBool = true;
 
 	}
 
-	public void OnDeselect(BaseEventData eventData)
+	public void Deselected()
 	{
-		if(_isFishButton)
+		
 		_anim.enabled = false;
 		/*if (_isFishButton)
 		{

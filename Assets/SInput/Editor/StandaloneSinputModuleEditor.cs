@@ -1,6 +1,8 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 using System.Collections;
+using SinputSystems;
 
 [CustomEditor(typeof(UnityEngine.EventSystems.StandaloneSinputModule))]
 [CanEditMultipleObjects]
@@ -17,6 +19,7 @@ public class StandaloneSinputModuleEditor : Editor {
 		ssm.m_SinputRightButton = EditorGUILayout.TextField("Right Control", ssm.m_SinputRightButton);
 		ssm.m_SinputSubmitButton = EditorGUILayout.TextField("Submit Control", ssm.m_SinputSubmitButton);
 		ssm.m_SinputCancelButton = EditorGUILayout.TextField("Cancel Control", ssm.m_SinputCancelButton);
+		ssm.m_InputSlotter = EditorGUILayout.TextField("Controller", ssm.m_InputSlotter);
 
 		
 		//ssm.inputActionsPerSecond = EditorGUILayout.FloatField("Input Actions Per Second", ssm.inputActionsPerSecond);

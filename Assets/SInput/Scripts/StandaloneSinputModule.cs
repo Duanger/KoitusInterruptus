@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using SinputSystems;
 using UnityEngine;
 //using UnityEngine.EventSystems;
 
@@ -26,8 +28,14 @@ namespace UnityEngine.EventSystems {
 		//[SerializeField]
 		public string m_SinputCancelButton = "Cancel";
 
+		public string m_InputSlotter = "any";
+
+		private InputDeviceSlot m_InputDeviceSlot;
+
 		public override void Process() {
 			bool usedEvent = SendUpdateEventToSelectedObject();
+
+			m_InputDeviceSlot = (InputDeviceSlot) Enum.Parse(typeof(InputDeviceSlot), m_InputSlotter);
 
 			if (eventSystem.sendNavigationEvents) {
 				if (!usedEvent)
@@ -47,12 +55,12 @@ namespace UnityEngine.EventSystems {
 			if (!base.ShouldActivateModule())
 				return false;
 
-			var shouldActivate = Sinput.GetButtonDown(m_SinputSubmitButton);
-			shouldActivate |= Sinput.GetButtonDown(m_SinputCancelButton);
-			shouldActivate |= Sinput.GetButtonDownRepeating(m_SinputUpButton);
-			shouldActivate |= Sinput.GetButtonDownRepeating(m_SinputDownButton);
-			shouldActivate |= Sinput.GetButtonDownRepeating(m_SinputLeftButton);
-			shouldActivate |= Sinput.GetButtonDownRepeating(m_SinputRightButton);
+			var shouldActivate = Sinput.GetButtonDown(m_SinputSubmitButton,m_InputDeviceSlot);
+			shouldActivate |= Sinput.GetButtonDown(m_SinputCancelButton,m_InputDeviceSlot);
+			shouldActivate |= Sinput.GetButtonDownRepeating(m_SinputUpButton,m_InputDeviceSlot);
+			shouldActivate |= Sinput.GetButtonDownRepeating(m_SinputDownButton,m_InputDeviceSlot);
+			shouldActivate |= Sinput.GetButtonDownRepeating(m_SinputLeftButton,m_InputDeviceSlot);
+			shouldActivate |= Sinput.GetButtonDownRepeating(m_SinputRightButton,m_InputDeviceSlot);
 
 			shouldActivate |= (m_MousePos - m_LastMousePos).sqrMagnitude > 0.0f;
 			shouldActivate |= Input.GetMouseButtonDown(0);
@@ -92,10 +100,10 @@ namespace UnityEngine.EventSystems {
 
 		private Vector2 GetRawMoveVector() {
 			Vector2 move = Vector2.zero;
-			if (Sinput.GetButtonDownRepeating(m_SinputUpButton)) move.y += 1f;
-			if (Sinput.GetButtonDownRepeating(m_SinputDownButton)) move.y -= 1f;
-			if (Sinput.GetButtonDownRepeating(m_SinputLeftButton)) move.x -= 1f;
-			if (Sinput.GetButtonDownRepeating(m_SinputRightButton)) move.x += 1f;
+			if (Sinput.GetButtonDownRepeating(m_SinputUpButton,m_InputDeviceSlot)) move.y += 1f;
+			if (Sinput.GetButtonDownRepeating(m_SinputDownButton,m_InputDeviceSlot)) move.y -= 1f;
+			if (Sinput.GetButtonDownRepeating(m_SinputLeftButton,m_InputDeviceSlot)) move.x -= 1f;
+			if (Sinput.GetButtonDownRepeating(m_SinputRightButton,m_InputDeviceSlot)) move.x += 1f;
 
 			return move;
 		}

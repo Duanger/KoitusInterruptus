@@ -7,6 +7,9 @@ TagManager:
   - UIHandler
   - ChooseFish
   - StartMenu
+  - Any
+  - Gamepad1
+  - Gamepad2
   layers:
   - Default
   - TransparentFX
