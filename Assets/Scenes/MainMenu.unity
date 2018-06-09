@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -124,6 +124,7 @@ GameObject:
   - component: {fileID: 10842802}
   - component: {fileID: 10842801}
   - component: {fileID: 10842800}
+  - component: {fileID: 10842804}
   m_Layer: 5
   m_Name: StartMenuCanvas
   m_TagString: StartMenu
@@ -209,6 +210,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &10842804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 10842799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5bd44062f658b64f9ee9d08977828d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _eventSystem:
+  - {fileID: 284309062}
+  - {fileID: 1876697568}
+  - {fileID: 166189480}
+  _uiHandler: {fileID: 1501641975}
+  _kindOfPlayerInput: 0
 --- !u!1 &166189480
 GameObject:
   m_ObjectHideFlags: 0
@@ -281,7 +299,7 @@ MonoBehaviour:
   m_Script: {fileID: -619905303, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 1124517144}
+  m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!4 &166189484
@@ -334,7 +352,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.1, y: 0.25}
   m_AnchorMax: {x: 0.1, y: 0.25}
-  m_AnchoredPosition: {x: 38, y: -24.301}
+  m_AnchoredPosition: {x: 38, y: -24.300995}
   m_SizeDelta: {x: 125, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &167426358
@@ -965,8 +983,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 245105295}
-        m_MethodName: PressedStart
+      - m_Target: {fileID: 10842804}
+        m_MethodName: StartCalled
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2422,6 +2440,47 @@ MonoBehaviour:
   Bagginton: {fileID: 254861432}
   _bagTargetVector: {x: -68, y: -443, z: 0}
   Started: 0
+--- !u!1 &1501641974
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1501641976}
+  - component: {fileID: 1501641975}
+  m_Layer: 0
+  m_Name: UIHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1501641975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1501641974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d60a58e89a56b7d4c834175aeb4d0492, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RunFirstTime: 0
+--- !u!4 &1501641976
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1501641974}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1560741339
 GameObject:
   m_ObjectHideFlags: 0
@@ -2433,6 +2492,7 @@ GameObject:
   - component: {fileID: 1560741342}
   - component: {fileID: 1560741341}
   - component: {fileID: 1560741340}
+  - component: {fileID: 1560741344}
   m_Layer: 5
   m_Name: ChooseFishCanvas
   m_TagString: ChooseFish
@@ -2485,8 +2545,8 @@ Canvas:
   m_GameObject: {fileID: 1560741339}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
-  m_Camera: {fileID: 0}
+  m_RenderMode: 0
+  m_Camera: {fileID: 1464642825}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -2519,6 +2579,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1560741344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1560741339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5bd44062f658b64f9ee9d08977828d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _eventSystem:
+  - {fileID: 284309062}
+  - {fileID: 1876697568}
+  - {fileID: 166189480}
+  _uiHandler: {fileID: 1501641975}
+  _kindOfPlayerInput: 1
 --- !u!1 &1732865254
 GameObject:
   m_ObjectHideFlags: 0
@@ -2556,7 +2633,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.1, y: 0.25}
   m_AnchorMax: {x: 0.1, y: 0.25}
-  m_AnchoredPosition: {x: 596, y: -24.301}
+  m_AnchoredPosition: {x: 596, y: -24.300995}
   m_SizeDelta: {x: 125, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1732865256
@@ -2799,7 +2876,7 @@ MonoBehaviour:
   m_Script: {fileID: -619905303, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 172968271}
+  m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!4 &1876697572

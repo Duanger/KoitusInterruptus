@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -211,8 +211,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16718bb5cd057b14ab8eeb956bc55873, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isBag: 0
+  _timeToLerp: 0
   _fish1: {fileID: 713948222}
   _fish2: {fileID: 596796098}
+  _cvas: {fileID: 0}
+  _targetVector: {x: 0, y: 0, z: 0}
+  Bagginton: {fileID: 0}
+  _bagTargetVector: {x: 0, y: 0, z: 0}
+  Started: 0
 --- !u!1 &332023379
 GameObject:
   m_ObjectHideFlags: 0
@@ -486,6 +493,132 @@ Prefab:
         type: 2}
       propertyPath: fishType
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 231707184923807422, guid: e498c7289e06fdf4ab281a00e7774759,
+        type: 2}
+      propertyPath: m_AutoConfigureDistance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 231329142927192918, guid: e498c7289e06fdf4ab281a00e7774759,
+        type: 2}
+      propertyPath: m_AutoConfigureDistance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 231935135479933162, guid: e498c7289e06fdf4ab281a00e7774759,
+        type: 2}
+      propertyPath: m_AutoConfigureDistance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 231193478477555278, guid: e498c7289e06fdf4ab281a00e7774759,
+        type: 2}
+      propertyPath: m_AutoConfigureDistance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 231560434923074376, guid: e498c7289e06fdf4ab281a00e7774759,
+        type: 2}
+      propertyPath: m_AutoConfigureDistance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 231293636059493724, guid: e498c7289e06fdf4ab281a00e7774759,
+        type: 2}
+      propertyPath: m_AutoConfigureDistance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 231023651272060224, guid: e498c7289e06fdf4ab281a00e7774759,
+        type: 2}
+      propertyPath: m_AutoConfigureDistance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 231089347878309370, guid: e498c7289e06fdf4ab281a00e7774759,
+        type: 2}
+      propertyPath: m_AutoConfigureDistance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 231293636059493724, guid: e498c7289e06fdf4ab281a00e7774759,
+        type: 2}
+      propertyPath: m_Distance
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 231089347878309370, guid: e498c7289e06fdf4ab281a00e7774759,
+        type: 2}
+      propertyPath: m_Distance
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 231329142927192918, guid: e498c7289e06fdf4ab281a00e7774759,
+        type: 2}
+      propertyPath: m_Distance
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 231935135479933162, guid: e498c7289e06fdf4ab281a00e7774759,
+        type: 2}
+      propertyPath: m_Distance
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 231193478477555278, guid: e498c7289e06fdf4ab281a00e7774759,
+        type: 2}
+      propertyPath: m_Distance
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 231560434923074376, guid: e498c7289e06fdf4ab281a00e7774759,
+        type: 2}
+      propertyPath: m_Distance
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 231023651272060224, guid: e498c7289e06fdf4ab281a00e7774759,
+        type: 2}
+      propertyPath: m_Distance
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 231707184923807422, guid: e498c7289e06fdf4ab281a00e7774759,
+        type: 2}
+      propertyPath: m_Distance
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 231779525271206462, guid: e498c7289e06fdf4ab281a00e7774759,
+        type: 2}
+      propertyPath: m_AutoConfigureDistance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 231779525271206462, guid: e498c7289e06fdf4ab281a00e7774759,
+        type: 2}
+      propertyPath: m_Distance
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1222843788550416, guid: e498c7289e06fdf4ab281a00e7774759, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1679263379853678, guid: e498c7289e06fdf4ab281a00e7774759, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1751690194177218, guid: e498c7289e06fdf4ab281a00e7774759, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1031487379067940, guid: e498c7289e06fdf4ab281a00e7774759, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1339118099361672, guid: e498c7289e06fdf4ab281a00e7774759, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1788385524667134, guid: e498c7289e06fdf4ab281a00e7774759, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1872610996066064, guid: e498c7289e06fdf4ab281a00e7774759, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1661233144458592, guid: e498c7289e06fdf4ab281a00e7774759, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1384273951674738, guid: e498c7289e06fdf4ab281a00e7774759, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e498c7289e06fdf4ab281a00e7774759, type: 2}

@@ -23,9 +23,9 @@ public class LineController : MonoBehaviour
 	{
 		bool runOncePlease = false;
 		float currentDistance = 0;
-		for (int i = 1; i < Points.Length - 1; i++)
+		for (int i = 2; i < Points.Length - 1; i++)
 		{
-			currentDistance = Points[0].position.magnitude - Points[i].position.magnitude;
+			currentDistance = Points[1].position.magnitude - Points[i].position.magnitude;
 		}
 		currentDistance = Mathf.Abs(currentDistance);
 		Debug.Log(currentDistance);
@@ -43,7 +43,7 @@ public class LineController : MonoBehaviour
 			}
 		}
 	
-		if(currentDistance > _snapDist)
+		/*if(currentDistance > _snapDist)
 			{
 				if (!_snapped)
 				{
@@ -62,7 +62,7 @@ public class LineController : MonoBehaviour
 					}
 				}
 				Killme();
-			}
+			}*/
 	}
 
 	void Killme()

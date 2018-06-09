@@ -32,16 +32,6 @@ public class UIButton : MonoBehaviour
 			_iman = GetComponentInChildren<Image>();
 			_imAnim = GetComponent<Animator>();
 		}
-		if (gameObject.name == "Start")
-		{
-			_anyEventSystem = GameObject.FindGameObjectWithTag("Any");
-			_eventSystem1 = GameObject.FindGameObjectWithTag("Gamepad1");
-			_eventSystem2 = GameObject.FindGameObjectWithTag("Gamepad2");
-			_eventSystem1.SetActive(false);
-			_eventSystem2.SetActive(false);
-			_herChoice = GameObject.FindGameObjectWithTag("ChooseFish");
-			_herChoice.SetActive(false);
-		}
 
 		if (ButtonIndex == 1)
 		{
